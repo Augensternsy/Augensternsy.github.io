@@ -241,7 +241,7 @@ mark {
 }
 
 .bg-color {
-    background-image: linear-gradient(to right, #fe909d, #f64879);
+    background-image: linear-gradient(to right, #f58895, #ea6d77);
 }
 
 .text-color {
@@ -257,7 +257,7 @@ mark {
     position: fixed;
     bottom: 0;
     z-index: 300;
-    background: linear-gradient(to right,#fe909d, #f64879);
+    background: linear-gradient(to right,#f58895, #ea6d77);
     opacity: 0.8;
 }
 
@@ -550,9 +550,9 @@ header .go-back i {
     height: 40vh !important;
 }
 
-.bg-cover:after {
-    -webkit-animation: rainbow 60s infinite;
-    animation: rainbow 60s infinite;
+.bg-cover:after {  /*彩虹颜色变换*/
+    /* -webkit-animation: rainbow 60s infinite;
+    animation: rainbow 60s infinite; */
 }
 
 .bg-cover:before,
@@ -1317,7 +1317,7 @@ thead {
 
 .chip-container .chip:hover {
     color: #fff;
-    background: linear-gradient(to right,#fe909d, #f64879) !important;
+    background: linear-gradient(to right,#f58895, #ea6d77) !important;
 }
 
 .chip .tag-length {
@@ -1630,7 +1630,7 @@ thead {
     padding: 0;
     color: #fff;
     border: 1px solid #0f9d58;
-    background: radial-gradient(#fe909d, #f64879);
+    background: radial-gradient(#f58895, #ea6d77);
     font-size: 0.9rem;
     border-radius: 50%;
     box-shadow: 0 4px 6px rgba(50, 50, 93, .21), 0 2px 3px rgba(0, 0, 0, .1);
@@ -1908,7 +1908,7 @@ p.search-result-summary{
 }
 
 .top-scroll .btn-floating {
-    background: linear-gradient(to bottom right, #fe909d, #f64879);
+    background: linear-gradient(to bottom right, #f58895, #ea6d77);
     width: 48px;
     height: 48px;
 }
