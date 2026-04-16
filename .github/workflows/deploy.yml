@@ -1,0 +1,45 @@
+name: Deploy Hexo
+
+on:
+  push:
+    branches:
+      - main
+
+# 关键修复 1：赋予 Action 推送代码到 gh-pages 分支的权限
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          npm install -g hexo-cli
+          # 1. 删掉可能导致冲突的锁文件
+          rm -f package-lock.json
+          # 2. 常规安装
+          npm install
+          # 3. 终极兜底：缺什么强行补什么！直接把 hexo 和 bluebird 强行装一遍
+          npm install hexo bluebird --save
+
+      - name: Clean and Generate Static Files
+        run: |
+          # 确保使用 npx 来调用本地安装的 hexo 核心
+          npx hexo clean
+          npx hexo generate
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
