@@ -3,7 +3,7 @@ name: Deploy Hexo
 on:
   push:
     branches:
-      - main
+      - gh-pages
 
 # 关键修复 1：赋予 Action 推送代码到 gh-pages 分支的权限
 permissions:
