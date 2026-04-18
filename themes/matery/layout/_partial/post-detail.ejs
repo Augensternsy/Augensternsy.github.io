@@ -182,6 +182,10 @@
         <%- partial('_partial/valine') %>
     <% } %>
 
+    <% if (theme.minivaline && theme.minivaline.enable) { %>
+        <%- partial('_partial/minivaline') %>
+    <% } %>
+
     <% if (theme.waline && theme.waline.enable) { %>
         <%- partial('_partial/waline') %>
     <% } %>
@@ -236,4 +240,20 @@
 </script>
 <% } %>
 
-<%- partial('_partial/codeblock') %>
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.codeblock) %>"></script>
+
+<!-- 代码语言 -->
+<% if (theme.code.lang) { %>
+<script type="text/javascript" src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.codelang) %>"></script>
+<% } %>
+
+<!-- 代码块复制 -->
+<% if (theme.code.copy) { %>
+<script type="text/javascript" src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.codecopy) %>"></script>
+<% } %>
+
+<!-- 代码块收缩 -->
+<% if (theme.code.shrink) { %>
+<script type="text/javascript" src="<%- theme.jsDelivr.url %><%- url_for(theme.libs.js.codeshrink) %>"></script>
+<% } %>
