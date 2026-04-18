@@ -15,6 +15,7 @@ email: 3319948430@qq.com
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://augensternsy.github.io
+root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -115,8 +116,8 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-# theme: matery
-theme: next
+theme: matery
+# theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -145,7 +146,7 @@ postInfo:
 # Whether to display the music
 music:
   enable: true
-  title: 		   # non-fixed mode works
+  title:       # non-fixed mode works
     enable: true
     show: Listen to music
   server: netease   # require music platform: netease, tencent, kugou, xiami, baidu
@@ -178,7 +179,6 @@ jsonContent:
     excerpt: false
     categories: false
     tags: true
-
 
 live2d:
     enable: true
