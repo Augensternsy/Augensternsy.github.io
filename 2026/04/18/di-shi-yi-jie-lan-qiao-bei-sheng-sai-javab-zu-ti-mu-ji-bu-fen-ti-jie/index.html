@@ -33,6 +33,14 @@
 
 <meta name="generator" content="Hexo 6.3.0"></head>
 
+<style>
+    body, html {
+        cursor: url('https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/image/cursor/normal.cur'), auto !important;
+    }
+    a, .btn, i, li, img, span, button {
+        cursor: url('https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/image/cursor/link.cur'), pointer !important;
+    }
+</style>
 
 
    <style>
@@ -46,10 +54,9 @@
 
 
 
- <!-- 每次点击鼠标，不会弹出具象的东西，而是会有一圈非常干净、有科技感的彩色粒子像小烟花一样炸开然后消失。 -->
-<canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
-<script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/js/fireworks.js"></script>
+<script type="text/javascript">
+    !function(e,t,a){function r(){for(var e=0;e<s.length;e++)s[e].alpha<=0?(t.body.removeChild(s[e].el),s.splice(e,1)):(s[e].y--,s[e].scale+=.004,s[e].alpha-=.013,s[e].el.style.cssText="left:"+s[e].x+"px;top:"+s[e].y+"px;opacity:"+s[e].alpha+";transform:scale("+s[e].scale+") rotate(45deg);background:"+s[e].color+";z-index:99999");requestAnimationFrame(r)}var s=[];window.requestAnimationFrame=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(e){setTimeout(e,1e3/60)},i="function"==typeof e.onclick&&e.onclick,e.onclick=function(a){i&&i(),function(a){var r=t.createElement("div");r.className="heart",s.push({el:r,x:a.clientX-5,y:a.clientY-5,scale:1,alpha:1,color:"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"}),t.body.appendChild(r)}(a)},function(e){var a=t.createElement("style");a.type="text/css";try{a.appendChild(t.createTextNode(e))}catch(t){a.styleSheet.cssText=e}t.getElementsByTagName("head")[0].appendChild(a)}(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}"),r()}(window,document);
+</script>
 
 <body>
     <header class="navbar-fixed">
@@ -864,48 +871,9 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
-            <div class="card">
-                <a href="/2026/04/18/di-shi-yi-jie-lan-qiao-bei-sheng-sai-javab-zu-ti-mu-ji-bu-fen-ti-jie/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
-                        
-                        <span class="card-title"></span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-04-18
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            Wsy
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-            </div>
-        </div>
-        
-        
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
                 <a href="/2026/04/18/di-shi-er-jie-lan-qiao-bei-sheng-sai-javab-zu-ti-mu-ji-bu-fen-ti-jie/">
                     <div class="card-image">
@@ -923,8 +891,45 @@
                         
                     </div>
                     <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2026-04-18
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Wsy
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/01/19/di-shi-yi-jie-lan-qiao-bei-guo-sai-ti-mu-ji-bu-fen-ti-jie/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="第十一届蓝桥杯国赛C/C++B组题目及部分题解">
+                        
+                        <span class="card-title">第十一届蓝桥杯国赛C/C++B组题目及部分题解</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-04-18
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-01-19
                             </span>
                         <span class="publish-author">
                             
