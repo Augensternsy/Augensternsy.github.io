@@ -88,11 +88,23 @@
 
 </head>
 
-<style>
+<!-- <style>
     body, html {
         cursor: url('https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/image/cursor/normal.cur'), auto !important;
     }
     a, .btn, i, li, img, span, button {
         cursor: url('https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/image/cursor/link.cur'), pointer !important;
+    }
+</style> -->
+
+<style>
+    /* 全局普通状态的鼠标指针：调用 normal.cur */
+    body, html {
+        cursor: url('/medias/Whack-and-Blite-89478f95/normal.cur'), auto !important;
+    }
+    
+    /* 鼠标悬停在链接、按钮上的指针：调用 link.cur */
+    a, button, .btn, i, img, .nav-menu li, span {
+        cursor: url('/medias/Whack-and-Blite-89478f95/link.cur'), pointer !important;
     }
 </style>
