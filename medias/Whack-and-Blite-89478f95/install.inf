@@ -1,0 +1,44 @@
+[Version]
+signature="$CHICAGO$"
+
+[DefaultInstall]
+CopyFiles = Scheme.Cur
+AddReg = Scheme.Reg
+
+[DestinationDirs]
+Scheme.Cur = 25,Cursors
+
+[Scheme.Cur]
+resize diagonal 2.cur
+resize horizontal.cur
+resize vertical.cur
+resize diagonal 1.cur
+link.cur
+unavailable.cur
+text.cur
+precise.cur
+move.cur
+help.cur
+normal.cur
+alternate.cur
+background.ani
+busy.ani
+
+[Scheme.Reg]
+HKCU,"Control Panel\Cursors","SizeNESW",,"%25%\Cursors\resize diagonal 2.cur"
+HKCU,"Control Panel\Cursors","SizeWE",,"%25%\Cursors\resize horizontal.cur"
+HKCU,"Control Panel\Cursors","SizeNS",,"%25%\Cursors\resize vertical.cur"
+HKCU,"Control Panel\Cursors","SizeNWSE",,"%25%\Cursors\resize diagonal 1.cur"
+HKCU,"Control Panel\Cursors","Hand",,"%25%\Cursors\link.cur"
+HKCU,"Control Panel\Cursors","No",,"%25%\Cursors\unavailable.cur"
+HKCU,"Control Panel\Cursors","IBeam",,"%25%\Cursors\text.cur"
+HKCU,"Control Panel\Cursors","Cross",,"%25%\Cursors\precise.cur"
+HKCU,"Control Panel\Cursors","SizeAll",,"%25%\Cursors\move.cur"
+HKCU,"Control Panel\Cursors","Help",,"%25%\Cursors\help.cur"
+HKCU,"Control Panel\Cursors","Arrow",,"%25%\Cursors\normal.cur"
+HKCU,"Control Panel\Cursors","UpArrow",,"%25%\Cursors\alternate.cur"
+HKCU,"Control Panel\Cursors","AppStarting",,"%25%\Cursors\background.ani"
+HKCU,"Control Panel\Cursors","Wait",,"%25%\Cursors\busy.ani"
+; Set scheme name
+HKCU,"Control Panel\Cursors","(Default)",,"Whack and Blite"
+HKCU,"Control Panel\Cursors\Schemes","Whack and Blite",,""
