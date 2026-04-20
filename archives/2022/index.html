@@ -920,21 +920,24 @@ $(function () {
     <!-- 加入个人简历智能体agent -->
     <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
     <script>
-    new CozeWebSDK.WebChatClient({
+        new CozeWebSDK.WebChatClient({
         config: {
-        bot_id: '7630725478156075060',
+            bot_id: '7630725478156075060', 
         },
         componentProps: {
-        title: 'Coze',
+            title: '诗颖的面试助理',
         },
         auth: {
-        type: 'token',
-        token: 'pat_wsy',
-        onRefreshToken: function () {
-            return 'pat_wsy0110'
+            type: 'token',
+            // 1. 把你刚才那串真实的密钥填在这里（注意要有单引号包围）
+            token: 'cztei_lozohOoGqmoqljb5ywYpY364LoPwWAGXkEejPAE7g0RCNR8mPDYg3qbmBCmzvsKcB',
+            
+            // 2. 这里是一个 JavaScript 函数，必须 return 你上面的那串密钥
+            onRefreshToken: function () {
+            return 'cztei_lozohOoGqmoqljb5ywYpY364LoPwWAGXkEejPAE7g0RCNR8mPDYg3qbmBCmzvsKcB';
+            }
         }
-        }
-    });
+        });
     </script>
 
 
