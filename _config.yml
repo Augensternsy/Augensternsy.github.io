@@ -180,13 +180,14 @@ jsonContent:
     categories: false
     tags: true
 
+# 看板娘
 live2d:
     enable: true
     scriptFrom: local
     model: 
         use: live2d-widget-model-koharu #模型选择
     display: 
-        position: right  #模型位置
+        position: left  #模型位置
         width: 150       #模型宽度
         height: 300      #模型高度
     mobile: 
