@@ -20,9 +20,7 @@ chroma_db/
 
 # Test results
 test-results/
-*.json
-
-# Conversation history
+test_cases_*.json
 conversation_history_*.json
 demo_memory_history.json
 
