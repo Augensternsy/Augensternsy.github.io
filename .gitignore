@@ -5,3 +5,26 @@ db.json
 node_modules/
 public/
 .deploy*/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.env
+
+# ChromaDB
+chroma_db/
+
+# Test results
+test-results/
+*.json
+
+# Conversation history
+conversation_history_*.json
+demo_memory_history.json
+
+# Sensitive config
+config_env.bat
