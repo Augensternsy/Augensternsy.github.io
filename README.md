@@ -1,11 +1,12 @@
 # 个人技术博客与 AI 工具链
 
-> 基于 Hexo + GitHub Actions CI/CD + AI 测试用例生成器的一站式技术平台
+> 基于 Hexo + GitHub Actions CI/CD + AI 测试用例生成器 + Coze Agent 的一站式技术平台
 
 [![Hexo](https://img.shields.io/badge/Hexo-6.3+-blue.svg)](https://hexo.io/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.13+-orange.svg)](https://www.python.org/)
 [![LangChain](https://img.shields.io/badge/LangChain-0.3+-purple.svg)](https://www.langchain.com/)
+[![Coze](https://img.shields.io/badge/Coze-Agent-blueviolet.svg)](https://www.coze.cn/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
@@ -16,9 +17,9 @@
 
 | 模块 | 技术栈 | 功能描述 |
 |------|--------|----------|
-| **个人博客** | Hexo + GitHub Actions | 基于 Node.js 的静态博客，具备完整 CI/CD 流水线 |
-| **AI 测试用例生成器** | FastAPI + DeepSeek + RAG | 基于大语言模型的智能测试用例生成工具 |
-| **个人数字分身** | Coze 框架 + RAG | ✅ 已完成 - 基于 Prompt 工程的专属智能体"诗颖的助理"，集成到博客页面 |
+| **个人博客** | Node.js + Hexo + GitHub Actions | 具备 CI/CD 流水线的个人网站，实现自动化发布闭环 |
+| **AI 测试用例生成器** | FastAPI + DeepSeek + LangChain RAG | 基于大语言模型的智能测试用例生成工具，部署于 Vercel Serverless |
+| **个人数字分身** | Coze 框架 + Prompt 工程 + RAG | 专属智能体，支持联网检索与简历知识库的高精准问答 |
 
 ---
 
@@ -34,7 +35,7 @@
 │  │  • Node.js + Hexo           │  │  • FastAPI + Mangum            │  │
 │  │  • GitHub Actions CI/CD     │  │  • DeepSeek-V3 LLM             │  │
 │  │  • Matery 主题              │  │  • LangChain RAG               │  │
-│  │  • 自动化部署到 gh-pages    │  │  • 纯内存向量检索               │  │
+│  │  • 自动化发布闭环           │  │  • 纯内存向量检索               │  │
 │  │                             │  │  • Vercel Serverless 部署       │  │
 │  │  访问: https://augensternsy.github.io                            │  │
 │  │                             │  │  访问: https://xxx.vercel.app/api/generate_cases │
@@ -43,7 +44,7 @@
 │  ┌─────────────────────────────────────────────────────────────────┐    │
 │  │                  模块三：个人数字分身 (Agent)                    │    │
 │  │  • Coze 框架                                                   │    │
-│  │  • Prompt 工程约束                                             │    │
+│  │  • Prompt 工程逻辑约束                                         │    │
 │  │  • 联网检索 Skill                                              │    │
 │  │  • RAG 简历知识库                                              │    │
 │  │  • 个人技术栈与履历的高精准问答                                  │    │
@@ -56,15 +57,16 @@
 
 ## 📦 核心功能
 
-### 模块一：个人博客（CI/CD 自动化发布）
+### 模块一：个人博客（CI/CD 自动化发布闭环）
 
-**功能描述**：基于 Hexo 的现代化个人技术博客，具备完整的 CI/CD 流水线。
+**功能描述**：基于 Node.js+Hexo 与 GitHub Actions 构建具备 CI/CD 流水线的个人网站，实现自动化发布闭环。
 
 **核心特性**：
 - ✅ **自动化构建**：GitHub Actions 自动触发构建
 - ✅ **自动部署**：构建产物自动部署到 `gh-pages` 分支
 - ✅ **主题美化**：Matery 主题，响应式设计
 - ✅ **SEO 优化**：支持搜索索引生成
+- ✅ **发布闭环**：代码推送即完成发布
 
 **CI/CD 流程**：
 ```
@@ -90,7 +92,7 @@ npm run deploy
 
 ### 模块二：AI 测试用例生成器
 
-**功能描述**：基于 FastAPI + DeepSeek 开发的智能测试用例生成工具，支持 RAG 检索增强。
+**功能描述**：基于 FastAPI + DeepSeek 开发 AI 测试用例生成器，部署于 Vercel Serverless 环境并集成前端交互插件；同步编写 Python 自动化脚本完成核心接口验证，保障工具可靠性。
 
 **核心特性**：
 - ✅ **RAG 检索增强**：从测试规范文档中检索相关知识
@@ -98,6 +100,7 @@ npm run deploy
 - ✅ **结构化输出**：标准 JSON 格式测试用例
 - ✅ **前端集成**：博客内嵌交互插件
 - ✅ **接口验证**：Python 自动化脚本保障可靠性
+- ✅ **Vercel Serverless**：无服务器架构部署
 
 **技术架构**：
 ```
@@ -137,9 +140,9 @@ Content-Type: application/json
 
 ---
 
-### 模块三：个人数字分身（Agent）
+### 模块三：个人数字分身（Coze Agent）
 
-**功能描述**：基于 Coze 框架开发的专属智能体"诗颖的助理"，已集成到博客页面，实现针对个人技术栈与履历的高精准问答。
+**功能描述**：研发个人数字分身（基于 Coze 框架的专属 Agent），运用 Prompt 工程进行逻辑约束；集成联网检索 Skill 与 RAG 简历知识库，实现针对个人技术栈与履历的高精准问答。
 
 **核心特性**：
 - ✅ **Prompt 工程约束**：精准的逻辑约束与角色定义
@@ -189,6 +192,8 @@ Content-Type: application/json
 │   └── ...
 ├── themes/                       # Hexo 主题
 │   └── matery/                   # Matery 主题
+│       └── layout/
+│           └── layout.ejs        # Coze Agent 集成
 ├── api-deploy/                   # AI 测试用例生成器 API
 │   ├── api/
 │   │   └── index.py              # FastAPI 主应用
@@ -259,7 +264,7 @@ EMBEDDING_MODEL=text-embedding-3-small
 
 ### GitHub Actions 配置
 
-`.github/workflows/deploy.yml` 实现了自动化发布：
+`.github/workflows/deploy.yml` 实现了自动化发布闭环：
 
 1. **触发条件**：`main` 分支有新推送
 2. **运行环境**：Ubuntu 最新版本
@@ -286,7 +291,7 @@ API 服务部署到 Vercel Serverless：
 | **RAG 检索增强** | 测试规范文档驱动的精准用例生成 |
 | **纯内存向量检索** | 无需重型向量库，适合 Serverless 环境 |
 | **前端集成** | 博客内嵌 AI 工具，用户体验无缝 |
-| **Agent 智能体** | 个人数字分身，精准问答能力 |
+| **Coze Agent** | 个人数字分身，精准问答能力 |
 
 ---
 
@@ -299,6 +304,7 @@ API 服务部署到 Vercel Serverless：
 3. **Prompt Engineering**：结构化 Prompt 约束 LLM 输出
 4. **Serverless 部署**：Vercel Serverless 环境适配
 5. **全栈开发**：前端博客 + 后端 API + AI 能力集成
+6. **Agent 开发**：Coze 框架智能体集成
 
 ---
 
