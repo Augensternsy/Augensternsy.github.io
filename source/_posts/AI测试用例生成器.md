@@ -64,15 +64,21 @@ categories:
 
 <!-- JavaScript 逻辑 -->
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   // 配置后端 API 地址（Vercel 部署后替换为实际地址）
-  const API_URL = 'https://your-project-name.vercel.app/api/generate_cases';
+  const API_URL = 'https://augensternsy-github-io.vercel.app/api/generate_cases';
   
   // 获取 DOM 元素
   const inputEl = document.getElementById('requirement-input');
   const btnEl = document.getElementById('generate-btn');
   const resultContainer = document.getElementById('result-container');
   const resultTable = document.getElementById('result-table');
+  
+  // 检查元素是否存在
+  if (!inputEl || !btnEl) {
+    console.error('未找到必要的 DOM 元素');
+    return;
+  }
   
   // 绑定按钮点击事件
   btnEl.addEventListener('click', async function() {
@@ -166,7 +172,7 @@ categories:
     resultTable.innerHTML = tableHTML;
     resultContainer.classList.remove('hidden');
   }
-})();
+});
 </script>
 
 ## 技术架构
@@ -184,4 +190,4 @@ categories:
 
 项目已开源至 GitHub，欢迎 Star 和 Fork：
 
-[GitHub 仓库地址](https://github.com/your-username/ai-sdet-toolkit)
+[GitHub 仓库地址](https://github.com/Augensternsy/ai-sdet-api)
