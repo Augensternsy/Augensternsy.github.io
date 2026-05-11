@@ -167,6 +167,17 @@
     
   </li>
   
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/" class="waves-effect waves-light">
+      
+      <i class="fas fa-robot" style="zoom: 0.6;"></i>
+      
+      <span>AI测试用例</span>
+    </a>
+    
+  </li>
+  
   <li>
     <a href="#searchModal" class="modal-trigger waves-effect waves-light">
       <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
@@ -264,6 +275,17 @@
 			    <i class="fa-fw fas fa-address-book"></i>
 			
 			友情链接
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-robot"></i>
+			
+			AI测试用例
 		</a>
           
         </li>
@@ -647,6 +669,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const testCases = data.data;
     
+    // 优先级颜色映射
+    const priorityColors = {
+      'P0': 'bg-red-100 text-red-800',
+      'P1': 'bg-yellow-100 text-yellow-800',
+      'P2': 'bg-green-100 text-green-800'
+    };
+    
+    // 测试类型颜色映射
+    const typeColors = {
+      '功能测试': 'bg-blue-100 text-blue-800',
+      '异常测试': 'bg-orange-100 text-orange-800',
+      '边界测试': 'bg-purple-100 text-purple-800',
+      '性能测试': 'bg-indigo-100 text-indigo-800',
+      '安全测试': 'bg-pink-100 text-pink-800'
+    };
+    
     // 构建表格 HTML
     let tableHTML = `
       <table class="min-w-full bg-white border border-gray-300">
@@ -654,7 +692,11 @@ document.addEventListener('DOMContentLoaded', function() {
           <tr class="bg-gray-100">
             <th class="py-2 px-4 border-b text-left">用例编号</th>
             <th class="py-2 px-4 border-b text-left">测试场景</th>
+            <th class="py-2 px-4 border-b text-left">前置条件</th>
+            <th class="py-2 px-4 border-b text-left">操作步骤</th>
             <th class="py-2 px-4 border-b text-left">预期结果</th>
+            <th class="py-2 px-4 border-b text-left">优先级</th>
+            <th class="py-2 px-4 border-b text-left">测试类型</th>
           </tr>
         </thead>
         <tbody>
@@ -662,11 +704,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 添加每一行数据
     testCases.forEach(function(testCase) {
+      const priorityClass = priorityColors[testCase.priority] || 'bg-gray-100 text-gray-800';
+      const typeClass = typeColors[testCase.test_type] || 'bg-gray-100 text-gray-800';
+      const steps = Array.isArray(testCase.steps) ? testCase.steps.join(' → ') : (testCase.steps || '-');
+      
       tableHTML += `
         <tr class="hover:bg-gray-50">
-          <td class="py-2 px-4 border-b">${testCase.case_id || '-'}</td>
+          <td class="py-2 px-4 border-b font-mono text-sm">${testCase.case_id || '-'}</td>
           <td class="py-2 px-4 border-b">${testCase.test_point || '-'}</td>
-          <td class="py-2 px-4 border-b">${testCase.expected_result || '-'}</td>
+          <td class="py-2 px-4 border-b text-sm text-gray-600">${testCase.precondition || '-'}</td>
+          <td class="py-2 px-4 border-b text-sm">${steps}</td>
+          <td class="py-2 px-4 border-b text-sm text-gray-700">${testCase.expected_result || '-'}</td>
+          <td class="py-2 px-4 border-b"><span class="px-2 py-1 rounded text-xs font-bold ${priorityClass}">${testCase.priority || '-'}</span></td>
+          <td class="py-2 px-4 border-b"><span class="px-2 py-1 rounded text-xs font-bold ${typeClass}">${testCase.test_type || '-'}</span></td>
         </tr>
       `;
     });
@@ -687,10 +737,10 @@ document.addEventListener('DOMContentLoaded', function() {
 <ul>
 <li><strong>后端</strong>：Python + FastAPI</li>
 <li><strong>AI 模型</strong>：DeepSeek-V3 大语言模型</li>
-<li><strong>向量数据库</strong>：ChromaDB</li>
-<li><strong>Embedding 模型</strong>：BGE (BAAI/bge-base-zh-v1.5)</li>
-<li><strong>前端</strong>：原生 HTML + CSS + JavaScript</li>
-<li><strong>部署</strong>：Vercel Serverless</li>
+<li><strong>前端</strong>：原生 HTML + CSS + JavaScript (Tailwind CSS)</li>
+<li><strong>部署</strong>：Vercel Serverless (Mangum)</li>
+<li><strong>API 设计</strong>：RESTful API + CORS 跨域支持</li>
+<li><strong>提示词工程</strong>：System Prompt 约束输出格式与测试类型覆盖</li>
 </ul>
 <h2 id="项目源码"><a href="#项目源码" class="headerlink" title="项目源码"></a>项目源码</h2><p>项目已开源至 GitHub，欢迎 Star 和 Fork：</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Augensternsy/Augensternsy.github.io">GitHub 仓库地址</a></p>
@@ -937,6 +987,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     
+        
 
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
@@ -1016,6 +1067,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </article>
 
+    
 </div>
 
 
