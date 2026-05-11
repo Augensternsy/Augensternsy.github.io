@@ -1,401 +1,300 @@
-# AI-Driven SDET Toolkit
+# 个人技术博客与 AI 工具链
 
-> 基于 RAG 与 Agent 的自动化测试助手
+> 基于 Hexo + GitHub Actions CI/CD + AI 测试用例生成器的一站式技术平台
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![LangChain](https://img.shields.io/badge/LangChain-0.2+-green.svg)](https://www.langchain.com/)
+[![Hexo](https://img.shields.io/badge/Hexo-6.3+-blue.svg)](https://hexo.io/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.13+-orange.svg)](https://www.python.org/)
+[![LangChain](https://img.shields.io/badge/LangChain-0.3+-purple.svg)](https://www.langchain.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 项目背景
+## 🎯 项目概览
 
-在软件测试领域，测试工程师和 SDET 面临两大核心痛点：
+本项目是一个综合性的技术平台，包含三大核心模块：
 
-1. **测试用例编写效率低**：手工编写测试用例耗时耗力，需要反复查阅测试规范文档
-2. **长对话上下文管理难**：多轮对话中 LLM 的 Token 容易撑爆，导致上下文丢失或请求失败
-
-本项目通过 **RAG（检索增强生成）** 和 **Agent 智能体** 技术，构建了一套完整的 AI 测试工具链，实现：
-
-- 从规范文档到测试用例的自动生成
-- 多轮对话的滑动窗口记忆管理
-- 从 HTML DOM 到 Selenium 脚本的一键生成
+| 模块 | 技术栈 | 功能描述 |
+|------|--------|----------|
+| **个人博客** | Hexo + GitHub Actions | 基于 Node.js 的静态博客，具备完整 CI/CD 流水线 |
+| **AI 测试用例生成器** | FastAPI + DeepSeek + RAG | 基于大语言模型的智能测试用例生成工具 |
+| **个人数字分身** | Coze 框架 + RAG | 基于 Prompt 工程的专属智能体，支持联网检索与简历知识库 |
 
 ---
 
-## 技术架构
+## 🏗️ 架构设计
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    AI-Driven SDET Toolkit                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │  Stage 1     │  │  Stage 2     │  │  Stage 3         │  │
-│  │  RAG 知识库  │─▶│  JSON 用例   │  │  对话记忆管理    │  │
-│  │  构建        │  │  生成        │  │  (滑动窗口)      │  │
-│  └──────────────┘  └──────────────┘  └──────────────────┘  │
-│         │                  │                  │             │
-│         ▼                  ▼                  ▼             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │              Core Technologies                       │  │
-│  ├──────────────────────────────────────────────────────┤  │
-│  │  Python 3.10+  │  LangChain  │  ChromaDB            │  │
-│  │  BGE Embedding │  OpenAI API │  tiktoken            │  │
-│  │  BeautifulSoup │  Selenium   │  Recursive Splitter  │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │              Stage 4: DOM → Selenium                 │  │
-│  │  HTML 结构 ─▶ 元素分析 ─▶ Prompt ─▶ LLM ─▶ 脚本     │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 核心技术栈
-
-| 技术 | 用途 | 说明 |
-|------|------|------|
-| **Python 3.10+** | 开发语言 | 主要编程语言 |
-| **LangChain** | 框架 | 文档加载、文本分割、向量存储 |
-| **ChromaDB** | 向量数据库 | 本地持久化存储向量数据 |
-| **BGE Embedding** | 向量化模型 | `BAAI/bge-base-zh-v1.5` 中文优化 |
-| **OpenAI API** | LLM 调用 | 兼容 DeepSeek 等第三方 API |
-| **tiktoken** | Token 计数 | 精确计算对话 Token 消耗 |
-| **BeautifulSoup** | HTML 解析 | 提取 DOM 元素信息 |
-| **Selenium** | 自动化测试 | 生成的目标测试框架 |
-
----
-
-## 核心功能
-
-### 第一阶段：RAG 向量检索基础
-
-**功能描述**：将本地测试规范文档（Markdown/TXT）转换为可检索的向量知识库。
-
-**核心流程**：
-1. 读取 `./docs` 目录下所有 `.md` 和 `.txt` 文件
-2. 使用 `RecursiveCharacterTextSplitter` 进行文档切片（`chunk_size=500`, `chunk_overlap=50`）
-3. 使用 `HuggingFaceBgeEmbeddings` 将文本向量化
-4. 持久化保存到本地 `ChromaDB` 向量数据库
-
-**关键代码**：
-```python
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
-from langchain_community.vectorstores import Chroma
-
-# 文档切片
-splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-chunks = splitter.split_documents(documents)
-
-# 向量化
-embeddings = HuggingFaceBgeEmbeddings(
-    model_name="BAAI/bge-base-zh-v1.5",
-    model_kwargs={'device': 'cpu'}
-)
-
-# 持久化存储
-vectorstore = Chroma.from_documents(chunks, embeddings, persist_directory="./chroma_db")
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        个人技术博客与 AI 工具链                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌─────────────────────────────┐  ┌─────────────────────────────────┐  │
+│  │      模块一：Hexo 博客       │  │      模块二：AI 测试用例生成器    │  │
+│  │  • Node.js + Hexo           │  │  • FastAPI + Mangum            │  │
+│  │  • GitHub Actions CI/CD     │  │  • DeepSeek-V3 LLM             │  │
+│  │  • Matery 主题              │  │  • LangChain RAG               │  │
+│  │  • 自动化部署到 gh-pages    │  │  • 纯内存向量检索               │  │
+│  │                             │  │  • Vercel Serverless 部署       │  │
+│  │  访问: https://augensternsy.github.io                            │  │
+│  │                             │  │  访问: https://xxx.vercel.app/api/generate_cases │
+│  └─────────────────────────────┘  └─────────────────────────────────┘  │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │                  模块三：个人数字分身 (Agent)                    │    │
+│  │  • Coze 框架                                                   │    │
+│  │  • Prompt 工程约束                                             │    │
+│  │  • 联网检索 Skill                                              │    │
+│  │  • RAG 简历知识库                                              │    │
+│  │  • 个人技术栈与履历的高精准问答                                  │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### 第二阶段：结构化 Prompt 生成 JSON 用例
+## 📦 核心功能
 
-**功能描述**：结合向量库检索和结构化 Prompt，自动生成标准 JSON 格式的测试用例。
+### 模块一：个人博客（CI/CD 自动化发布）
 
-**核心流程**：
-1. 接收用户需求（如"登录接口，包含用户名和密码"）
-2. 从 ChromaDB 检索 Top-3 相关测试规范
-3. 构建包含 Few-Shot 示例的结构化 Prompt
-4. 调用 LLM 生成 JSON 格式测试用例
-5. JSON Schema 验证并保存到文件
+**功能描述**：基于 Hexo 的现代化个人技术博客，具备完整的 CI/CD 流水线。
 
-**输出格式**：
+**核心特性**：
+- ✅ **自动化构建**：GitHub Actions 自动触发构建
+- ✅ **自动部署**：构建产物自动部署到 `gh-pages` 分支
+- ✅ **主题美化**：Matery 主题，响应式设计
+- ✅ **SEO 优化**：支持搜索索引生成
+
+**CI/CD 流程**：
+```
+代码推送 → GitHub Actions 触发 → Hexo 构建 → 部署到 gh-pages → 网站更新
+```
+
+**快速启动**：
+```bash
+# 安装依赖
+npm install
+
+# 本地开发
+npm run server
+
+# 构建生产版本
+npm run build
+
+# 手动部署
+npm run deploy
+```
+
+---
+
+### 模块二：AI 测试用例生成器
+
+**功能描述**：基于 FastAPI + DeepSeek 开发的智能测试用例生成工具，支持 RAG 检索增强。
+
+**核心特性**：
+- ✅ **RAG 检索增强**：从测试规范文档中检索相关知识
+- ✅ **纯内存向量检索**：无需 FAISS，纯 Python 余弦相似度计算
+- ✅ **结构化输出**：标准 JSON 格式测试用例
+- ✅ **前端集成**：博客内嵌交互插件
+- ✅ **接口验证**：Python 自动化脚本保障可靠性
+
+**技术架构**：
+```
+用户输入 → 向量检索 → RAG 增强 Prompt → DeepSeek LLM → JSON 测试用例
+```
+
+**API 接口**：
+```
+POST /api/generate_cases
+Content-Type: application/json
+
+{
+"requirement": "登录接口，包含用户名和密码",
+"top_k": 3
+}
+```
+
+**输出示例**：
 ```json
 {
-  "test_cases": [
+"success": true,
+"data": [
     {
-      "case_id": "TC001",
-      "test_point": "正常登录 - 正确的用户名和密码",
-      "precondition": "用户已注册，账号存在且状态正常",
-      "steps": ["调用登录接口", "传入正确的用户名", "传入正确的密码"],
-      "expected_result": "返回200状态码和有效的token",
-      "priority": "P0",
-      "test_type": "功能测试"
+    "case_id": "TC001",
+    "test_point": "正常登录",
+    "precondition": "用户已注册",
+    "steps": ["打开登录页面", "输入用户名", "输入密码", "点击登录"],
+    "expected_result": "登录成功，跳转到首页",
+    "priority": "P0",
+    "test_type": "功能测试"
     }
-  ]
+],
+"total_cases": 5,
+"rag_enabled": true
 }
 ```
 
 ---
 
-### 第三阶段：对话记忆管理（滑动窗口截断）
+### 模块三：个人数字分身（Agent）
 
-**功能描述**：解决多轮对话中 Token 撑爆问题，实现动态滑动窗口截断策略。
+**功能描述**：基于 Coze 框架开发的专属智能体，实现针对个人技术栈与履历的高精准问答。
 
-**核心逻辑**：
-- 维护对话历史消息列表
-- 实时统计对话轮数和 Token 消耗
-- 超过阈值（10 轮 或 3000 tokens）时，自动丢弃最老的 4 轮对话
-- 始终保留 System Prompt
+**核心特性**：
+- ✅ **Prompt 工程约束**：精准的逻辑约束与角色定义
+- ✅ **联网检索 Skill**：实时获取最新信息
+- ✅ **RAG 简历知识库**：基于个人简历的精准问答
+- ✅ **多模态交互**：支持文本、图片等多种输入
 
-**关键代码**：
-```python
-class ConversationMemory:
-    def __init__(self, max_rounds=10, max_tokens=3000, truncate_rounds=4):
-        self.max_rounds = max_rounds
-        self.max_tokens = max_tokens
-        self.truncate_rounds = truncate_rounds
-        self.messages = []
-    
-    def should_truncate(self):
-        return self.count_rounds() > self.max_rounds or \
-               self.count_tokens() > self.max_tokens
-    
-    def truncate(self):
-        # 保留 System Prompt
-        system_messages = [m for m in self.messages if m["role"] == "system"]
-        other_messages = [m for m in self.messages if m["role"] != "system"]
-        
-        # 丢弃最老的 N 轮
-        messages_to_remove = self.truncate_rounds * 2
-        retained = other_messages[messages_to_remove:]
-        
-        self.messages = system_messages + retained
-```
-
-**运行效果**：
-```
-模拟 7 轮对话...
-  轮数:  5 | Token:  168 | 消息: 11 | 截断: 0
-  [触发截断条件] 当前轮数: 6 / 5
-  [执行截断] 丢弃最老的 2 轮对话...
-    截断后轮数: 4 | 截断后 Token: 115
-```
+**应用场景**：
+- 🎯 技术栈介绍与问答
+- 🎯 项目经验讲解
+- 🎯 面试问题模拟
+- 🎯 个人成就展示
 
 ---
 
-### 第四阶段：HTML → Selenium 脚本生成
+## 🛠️ 技术栈
 
-**功能描述**：输入 HTML DOM 结构，自动生成带显式等待的 Python+Selenium 测试脚本。
-
-**核心流程**：
-1. 使用 BeautifulSoup 解析 HTML，提取元素信息（id/name/class）
-2. 构建结构化 Prompt，包含元素定位策略和代码规范
-3. 调用 LLM 生成完整的 Selenium 测试脚本
-4. 自动提取 Python 代码块并保存为 `.py` 文件
-
-**生成脚本示例**：
-```python
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import unittest
-
-class TestLoginPage(unittest.TestCase):
-    def setUp(self):
-        self.driver = webdriver.Chrome()
-        self.wait = WebDriverWait(self.driver, 10)
-    
-    def test_login_functionality(self):
-        self.driver.get("http://example.com/login")
-        
-        username_input = self.wait.until(
-            EC.presence_of_element_located((By.ID, "username"))
-        )
-        username_input.send_keys("testuser")
-        
-        login_button = self.wait.until(
-            EC.element_to_be_clickable((By.ID, "loginBtn"))
-        )
-        login_button.click()
-        
-        self.wait.until(EC.url_changes(self.login_url))
-    
-    def tearDown(self):
-        self.driver.quit()
-```
+| 分类 | 技术 | 版本 | 用途 |
+|------|------|------|------|
+| **前端** | Hexo | 6.3+ | 静态博客框架 |
+| **前端** | Matery | - | 博客主题 |
+| **后端** | FastAPI | 0.115+ | API 服务框架 |
+| **后端** | Mangum | 0.18+ | Vercel 适配 |
+| **AI** | LangChain | 0.3+ | RAG 框架 |
+| **AI** | DeepSeek | - | 大语言模型 |
+| **AI** | Coze | - | Agent 框架 |
+| **CI/CD** | GitHub Actions | - | 自动化部署 |
+| **部署** | Vercel | - | Serverless 部署 |
 
 ---
 
-## 快速开始
-
-### 环境要求
-
-- Python 3.10+
-- pip 包管理器
-
-### 安装依赖
-
-```bash
-pip install -r requirements.txt
-```
-
-或手动安装：
-
-```bash
-pip install langchain langchain-community langchain-text-splisters chromadb \
-            sentence-transformers openai tiktoken beautifulsoup4
-```
-
-### 配置环境变量
-
-```powershell
-# Windows PowerShell
-$env:OPENAI_API_KEY="your-api-key"
-$env:OPENAI_BASE_URL="https://api.qnaigc.com/v1"
-$env:MODEL_NAME="deepseek-v3"
-```
-
-```bash
-# Linux/Mac
-export OPENAI_API_KEY="your-api-key"
-export OPENAI_BASE_URL="https://api.qnaigc.com/v1"
-export MODEL_NAME="deepseek-v3"
-```
-
-### 运行全部阶段
-
-```bash
-python run_all_stages.py
-```
-
-### 运行单个阶段
-
-```bash
-# 第一阶段：构建 RAG 知识库
-python run_all_stages.py --stage 1
-
-# 第二阶段：生成 JSON 测试用例
-python run_all_stages.py --stage 2
-
-# 第三阶段：对话记忆管理演示
-python run_all_stages.py --stage 3
-
-# 第四阶段：HTML → Selenium 脚本生成
-python run_all_stages.py --stage 4
-```
-
----
-
-## 项目结构
+## 📁 项目结构
 
 ```
 .
-├── docs/                          # 测试规范文档目录
-│   └── 软件测试规范.md
-├── chroma_db/                     # 向量数据库存储
-├── rag_knowledge_base.py          # 第一阶段：RAG 知识库构建
-├── test_case_generator.py         # 第二阶段：JSON 用例生成
-├── conversation_memory.py         # 第三阶段：对话记忆管理
-├── html_to_selenium.py            # 第四阶段：Selenium 脚本生成
-├── run_all_stages.py              # 统一运行入口
-├── requirements.txt               # Python 依赖
-└── README.md                      # 项目说明
+├── source/                        # Hexo 博客源码
+│   ├── _posts/                   # 博客文章
+│   │   └── AI测试用例生成器.md    # AI 工具交互页面
+│   ├── about/                    # 关于页面
+│   └── ...
+├── themes/                       # Hexo 主题
+│   └── matery/                   # Matery 主题
+├── api-deploy/                   # AI 测试用例生成器 API
+│   ├── api/
+│   │   └── index.py              # FastAPI 主应用
+│   ├── docs/
+│   │   └── 软件测试规范.md        # RAG 知识库
+│   ├── requirements.txt          # Python 依赖
+│   └── vercel.json              # Vercel 配置
+├── .github/
+│   └── workflows/
+│       └── deploy.yml            # GitHub Actions CI/CD
+├── _config.yml                   # Hexo 配置
+├── package.json                  # Node.js 依赖
+├── requirements.txt              # 本地开发依赖
+└── README.md                     # 项目说明
 ```
 
 ---
 
-## 使用示例
+## 🚀 快速开始
 
-### 示例 1：构建知识库并检索
+### 环境要求
 
-```python
-# 构建知识库
-python rag_knowledge_base.py
+| 模块 | 要求 |
+|------|------|
+| 博客 | Node.js 18+ |
+| API | Python 3.13+ |
 
-# 在代码中使用
-from rag_knowledge_base import build_vectorstore, search_similar
+### 博客开发
 
-vectorstore = build_vectorstore("./docs")
-results = search_similar(vectorstore, "如何进行性能测试？", top_k=3)
+```bash
+# 安装依赖
+npm install
+
+# 本地预览
+npm run server
+
+# 构建生产版本
+npm run build
 ```
 
-### 示例 2：生成测试用例
+### API 开发
 
-```python
-# 直接运行
-python test_case_generator.py
+```bash
+# 进入 API 目录
+cd api-deploy
 
-# 在代码中使用
-from test_case_generator import generate_test_cases
+# 安装依赖
+pip install -r requirements.txt
 
-result = generate_test_cases("登录接口，包含用户名和密码")
-print(result)
+# 启动开发服务器
+uvicorn api.index:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 示例 3：多轮对话管理
+### 环境变量配置
 
-```python
-from conversation_memory import ConversationMemory
+在 `api-deploy/.env` 中配置：
 
-memory = ConversationMemory(
-    system_prompt="你是一个测试专家助手。",
-    max_rounds=10,
-    max_tokens=3000,
-    truncate_rounds=4
-)
-
-memory.add_message("user", "什么是等价类划分？")
-memory.add_message("assistant", "等价类划分是一种黑盒测试方法...")
-
-# 检查是否需要截断
-if memory.should_truncate():
-    memory.truncate()
-```
-
-### 示例 4：HTML → Selenium 脚本
-
-```python
-from html_to_selenium import SeleniumScriptGenerator
-
-generator = SeleniumScriptGenerator(
-    api_key="your-api-key",
-    base_url="https://api.qnaigc.com/v1",
-    model="deepseek-v3"
-)
-
-html = """
-<div class="login-container">
-    <input type="text" id="username" name="username" placeholder="用户名">
-    <input type="password" id="password" name="password" placeholder="密码">
-    <button type="submit" id="loginBtn">登录</button>
-</div>
-"""
-
-script = generator.generate_script(html)
-generator.save_script(script, "test_login.py")
+```env
+OPENAI_API_KEY=your-api-key
+OPENAI_BASE_URL=https://api.qnaigc.com/v1
+MODEL_NAME=deepseek-v3
+EMBEDDING_MODEL=text-embedding-3-small
 ```
 
 ---
 
-## 技术亮点
+## 🔄 CI/CD 流水线
+
+### GitHub Actions 配置
+
+`.github/workflows/deploy.yml` 实现了自动化发布：
+
+1. **触发条件**：`main` 分支有新推送
+2. **运行环境**：Ubuntu 最新版本
+3. **执行步骤**：
+   - 安装 Node.js
+   - 安装依赖
+   - 构建 Hexo 博客
+   - 部署到 `gh-pages` 分支
+
+### Vercel 自动部署
+
+API 服务部署到 Vercel Serverless：
+- 推送代码自动触发部署
+- 支持 Serverless Function 运行
+- 自动 SSL 证书配置
+
+---
+
+## ✨ 技术亮点
 
 | 亮点 | 说明 |
 |------|------|
-| **RAG 向量检索** | 使用 BGE 中文模型 + ChromaDB，实现规范文档的精准检索 |
-| **结构化 Prompt** | Few-Shot + JSON Schema 验证，保证 LLM 输出格式稳定 |
-| **滑动窗口管理** | 动态截断策略，解决多轮对话 Token 撑爆问题 |
-| **DOM → 脚本生成** | BeautifulSoup 预处理 + 显式等待，生成高质量 Selenium 代码 |
-| **统一运行入口** | `run_all_stages.py` 一键运行全部阶段 |
+| **CI/CD 闭环** | GitHub Actions 实现代码推送即发布 |
+| **RAG 检索增强** | 测试规范文档驱动的精准用例生成 |
+| **纯内存向量检索** | 无需重型向量库，适合 Serverless 环境 |
+| **前端集成** | 博客内嵌 AI 工具，用户体验无缝 |
+| **Agent 智能体** | 个人数字分身，精准问答能力 |
 
 ---
 
-## 面试亮点
+## 🎯 面试亮点
 
-本项目可用于面试中展示以下能力：
+本项目可展示以下工程能力：
 
-- **RAG 技术落地**：从文档切片到向量检索的完整流程
-- **Prompt Engineering**：结构化 Prompt + Few-Shot + JSON Schema 约束
-- **上下文工程**：滑动窗口截断策略，解决 Token 限制问题
-- **自动化测试**：从 HTML DOM 到 Selenium 脚本的代码生成
-- **工程化能力**：模块化设计、统一运行入口、完整文档注释
+1. **CI/CD 实践**：GitHub Actions 自动化流水线配置
+2. **RAG 技术落地**：从文档加载到向量检索的完整流程
+3. **Prompt Engineering**：结构化 Prompt 约束 LLM 输出
+4. **Serverless 部署**：Vercel Serverless 环境适配
+5. **全栈开发**：前端博客 + 后端 API + AI 能力集成
 
 ---
 
-## License
+## 📄 License
 
 MIT License
