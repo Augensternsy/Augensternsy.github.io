@@ -24,6 +24,7 @@ categories:
 
 在下方输入框中输入你的测试需求，点击"生成测试用例"按钮即可。
 
+{% raw %}
 <!-- AI 测试用例生成器 - 博客插件 -->
 <!-- 引入 Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -45,13 +46,7 @@ categories:
     ></textarea>
   </div>
   
-  <!-- 生成按钮 -->
-  <button 
-    id="generate-btn" 
-    class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
-  >
-    生成测试用例
-  </button>
+<div id="button-container"></div>
   
   <!-- 结果展示区域 -->
   <div id="result-container" class="mt-6 hidden">
@@ -70,15 +65,22 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 获取 DOM 元素
   const inputEl = document.getElementById('requirement-input');
-  const btnEl = document.getElementById('generate-btn');
+  const buttonContainer = document.getElementById('button-container');
   const resultContainer = document.getElementById('result-container');
   const resultTable = document.getElementById('result-table');
   
   // 检查元素是否存在
-  if (!inputEl || !btnEl) {
+  if (!inputEl || !buttonContainer) {
     console.error('未找到必要的 DOM 元素');
     return;
   }
+  
+  // 动态创建按钮
+  const btnEl = document.createElement('button');
+  btnEl.id = 'generate-btn';
+  btnEl.className = 'bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200';
+  btnEl.textContent = '生成测试用例';
+  buttonContainer.appendChild(btnEl);
   
   // 绑定按钮点击事件
   btnEl.addEventListener('click', async function() {
@@ -190,4 +192,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 项目已开源至 GitHub，欢迎 Star 和 Fork：
 
-[GitHub 仓库地址](https://github.com/Augensternsy/ai-sdet-api)
+[GitHub 仓库地址](https://github.com/Augensternsy/Augensternsy.github.io)

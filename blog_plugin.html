@@ -40,7 +40,7 @@
 
 <!-- JavaScript 逻辑 -->
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
   // 配置后端 API 地址
   const API_URL = 'http://localhost:8002/api/generate_cases';
   
@@ -49,6 +49,12 @@
   const btnEl = document.getElementById('generate-btn');
   const resultContainer = document.getElementById('result-container');
   const resultTable = document.getElementById('result-table');
+  
+  // 检查元素是否存在
+  if (!inputEl || !btnEl) {
+    console.error('未找到必要的 DOM 元素');
+    return;
+  }
   
   // 绑定按钮点击事件
   btnEl.addEventListener('click', async function() {
@@ -142,5 +148,5 @@
     resultTable.innerHTML = tableHTML;
     resultContainer.classList.remove('hidden');
   }
-})();
+});
 </script>

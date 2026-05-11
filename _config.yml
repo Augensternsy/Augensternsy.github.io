@@ -135,6 +135,17 @@ permalink_pinyin:
   enable: true
   separator: '-' # default: '-'
 
+marked:
+  sanitize: false
+  breaks: true
+  gfm: true
+  prependRoot: false
+  postAsset: false
+
+markdown:
+  render:
+    html: true
+
 postInfo:
   date: true
   update: false
