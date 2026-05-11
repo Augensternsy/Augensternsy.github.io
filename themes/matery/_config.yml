@@ -22,6 +22,9 @@ menu:
   Friends:
     url: /friends
     icon: fas fa-address-book
+  AI测试用例:
+    url: /2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/
+    icon: fas fa-robot
   # 二级菜单写法如下
   #Medias:
   #  icon: fas fa-list

@@ -198,7 +198,9 @@
         <%- partial('_partial/twikoo') %>
     <% } %>
 
-    <%- partial('_partial/prev-next') %>
+    <% if (page.layout === 'post') { %>
+        <%- partial('_partial/prev-next') %>
+    <% } %>
 </div>
 
 <% if (theme.copyright.enable) { %>

@@ -1,6 +1,7 @@
 ---
 title: AI 测试用例生成器
 date: 2026-05-07 10:00:00
+top: true
 tags:
   - AI
   - 测试
@@ -141,6 +142,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const testCases = data.data;
     
+    // 优先级颜色映射
+    const priorityColors = {
+      'P0': 'bg-red-100 text-red-800',
+      'P1': 'bg-yellow-100 text-yellow-800',
+      'P2': 'bg-green-100 text-green-800'
+    };
+    
+    // 测试类型颜色映射
+    const typeColors = {
+      '功能测试': 'bg-blue-100 text-blue-800',
+      '异常测试': 'bg-orange-100 text-orange-800',
+      '边界测试': 'bg-purple-100 text-purple-800',
+      '性能测试': 'bg-indigo-100 text-indigo-800',
+      '安全测试': 'bg-pink-100 text-pink-800'
+    };
+    
     // 构建表格 HTML
     let tableHTML = `
       <table class="min-w-full bg-white border border-gray-300">
@@ -148,7 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
           <tr class="bg-gray-100">
             <th class="py-2 px-4 border-b text-left">用例编号</th>
             <th class="py-2 px-4 border-b text-left">测试场景</th>
+            <th class="py-2 px-4 border-b text-left">前置条件</th>
+            <th class="py-2 px-4 border-b text-left">操作步骤</th>
             <th class="py-2 px-4 border-b text-left">预期结果</th>
+            <th class="py-2 px-4 border-b text-left">优先级</th>
+            <th class="py-2 px-4 border-b text-left">测试类型</th>
           </tr>
         </thead>
         <tbody>
@@ -156,11 +177,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 添加每一行数据
     testCases.forEach(function(testCase) {
+      const priorityClass = priorityColors[testCase.priority] || 'bg-gray-100 text-gray-800';
+      const typeClass = typeColors[testCase.test_type] || 'bg-gray-100 text-gray-800';
+      const steps = Array.isArray(testCase.steps) ? testCase.steps.join(' → ') : (testCase.steps || '-');
+      
       tableHTML += `
         <tr class="hover:bg-gray-50">
-          <td class="py-2 px-4 border-b">${testCase.case_id || '-'}</td>
+          <td class="py-2 px-4 border-b font-mono text-sm">${testCase.case_id || '-'}</td>
           <td class="py-2 px-4 border-b">${testCase.test_point || '-'}</td>
-          <td class="py-2 px-4 border-b">${testCase.expected_result || '-'}</td>
+          <td class="py-2 px-4 border-b text-sm text-gray-600">${testCase.precondition || '-'}</td>
+          <td class="py-2 px-4 border-b text-sm">${steps}</td>
+          <td class="py-2 px-4 border-b text-sm text-gray-700">${testCase.expected_result || '-'}</td>
+          <td class="py-2 px-4 border-b"><span class="px-2 py-1 rounded text-xs font-bold ${priorityClass}">${testCase.priority || '-'}</span></td>
+          <td class="py-2 px-4 border-b"><span class="px-2 py-1 rounded text-xs font-bold ${typeClass}">${testCase.test_type || '-'}</span></td>
         </tr>
       `;
     });
@@ -183,10 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 - **后端**：Python + FastAPI
 - **AI 模型**：DeepSeek-V3 大语言模型
-- **向量数据库**：ChromaDB
-- **Embedding 模型**：BGE (BAAI/bge-base-zh-v1.5)
-- **前端**：原生 HTML + CSS + JavaScript
-- **部署**：Vercel Serverless
+- **前端**：原生 HTML + CSS + JavaScript (Tailwind CSS)
+- **部署**：Vercel Serverless (Mangum)
+- **API 设计**：RESTful API + CORS 跨域支持
+- **提示词工程**：System Prompt 约束输出格式与测试类型覆盖
 
 ## 项目源码
 
