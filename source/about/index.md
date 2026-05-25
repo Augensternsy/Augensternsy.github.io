@@ -50,13 +50,15 @@ comments: false
 ### 智能在线考试与防作弊监控系统
 *2026.01 - 2026.03*
 
-* 引入 Spring AI 框架对接大模型，通过结构化 Prompt 实现“根据文本一键生成试题（JSON格式）”并自动入库，大幅降低教务出题成本。 
-* 开发考试核心模块（Spring Boot + Vue）及 Tracking.js 人脸监控。运用 Charles/Fiddler 进行弱网模拟与异常状态码注入，保障防作弊系统在极端网络下的鲁棒性。
-* 基于 Python + Selenium 搭建自动化链路。针对“切屏、无人、多人”等硬件依赖场景，利用底层 JS 注入与虚拟视频流技术进行数据 Mock，实现复杂边界用例的自动化回归。
-* 针对“集中交卷”并发场景，预埋 5 万条测试数据并构建 JMeter 阶梯加压模型。通过慢查询日志与 EXPLAIN 分析定位全表扫描瓶颈，补充联合索引优化高耗时查询，使核心接口吞吐量实现显著提升。
+* 研发考试核心模块（Spring Boot + Vue），引入 Spring AI 框架对接 DeepSeek，运用结构化 Prompt 稳定输出 JSON 格式试题实现自动入库，大幅降低教务出题成本。
+* 搭建 Python + Selenium 自动化链路。针对集成 Tracking.js 的人脸识别监考场景，通过底层 JS 注入与虚拟视频流技术进行数据 Mock，实现"切屏、无人、多人"等复杂边界用例的自动化回归。
+* 针对"集中交卷"并发场景，预埋 5 万条测试数据并构建 JMeter 阶梯加压模型。通过慢查询日志与 EXPLAIN 分析定位全表扫描瓶颈，补充联合索引优化高耗时查询，使核心接口吞吐量实现显著提升。
+* 运用 Charles 注入异常状态码进行弱网容错测试；通过 Docker 统一测试环境，并在 Kubernetes 基础集群中，验证了后端 3 副本架构的负载均衡与 Liveness 探针的故障重启机制。
 
-### 个人博客网站
+### 个人博客网站与 AI 智能体平台
 *2022.01 - 至今*
 
 * **网站链接**：https://augensternsy.github.io/ 
-* 基于 Node.js + Hexo 搭建个人站点，利用 Git 进行版本管理。通过 GitHub Actions 构建 CI/CD 流水线，实现从 Markdown 源码提交到云端自动构建、发布的全自动化闭环。
+* 基于 Node.js + Hexo 与 GitHub Actions 构建具备 CI/CD 流水线的个人网站，实现自动化发布闭环。
+* 研发个人数字分身（基于 Coze 框架的专属 Agent），运用 Prompt 工程进行逻辑约束；集成联网检索 Skill 与 RAG 简历知识库，实现针对个人技术栈与履历的高精准问答。
+* 基于 FastAPI + DeepSeek 与 LangChain 框架开发 RAG 驱动的 AI 测试用例生成器，部署于 Vercel Serverless 环境并集成前端交互插件；同步编写 Python 自动化脚本完成核心接口验证，保障工具交付质量。
