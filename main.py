@@ -206,8 +206,8 @@ async def algorithm_solver(request: AlgorithmRequest):
         }
     
     api_key = os.getenv("OPENAI_API_KEY")
-    api_base = os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
-    model_name = os.getenv("MODEL_NAME", "deepseek-chat")
+    api_base = os.getenv("OPENAI_BASE_URL", "https://api.qnaigc.com/v1")
+    model_name = os.getenv("MODEL_NAME", "deepseek-v3")
     
     if not api_key:
         return {
