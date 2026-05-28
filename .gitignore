@@ -29,3 +29,6 @@ config_env.bat
 
 # Pip cache
 .pip_cache/
+
+# Ignore api-deploy directory to avoid Vercel confusion
+api-deploy/
