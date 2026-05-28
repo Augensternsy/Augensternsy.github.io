@@ -454,14 +454,6 @@
                     <option value="JavaScript">JavaScript</option>
                 </select>
             </div>
-            <div style="flex: 1;">
-                <label style="display: block !important; margin-bottom: 5px; font-weight: bold;">难度等级</label>
-                <select id="difficultySelect" style="width: 100% !important; padding: 10px; border: 1px solid #ddd !important; border-radius: 4px; height: 45px; background: white !important; color: #333; font-size: 14px; display: block !important; visibility: visible !important; opacity: 1 !important;">
-                    <option value="easy">简单</option>
-                    <option value="medium">中等</option>
-                    <option value="hard">困难</option>
-                </select>
-            </div>
         </div>
 
         <button id="solveBtn" style="width: 100% !important; padding: 12px; background: #007bff !important; color: white !important; border: none !important; border-radius: 4px; font-size: 16px; cursor: pointer; display: block !important; position: relative; z-index: 100;">🚀 生成题解</button>
@@ -481,6 +473,16 @@
         <div class="result-section">
             <h4>🏷️ 题型识别</h4>
             <div id="problemType"></div>
+        </div>
+
+        <div class="result-section">
+            <h4>📊 题目难度</h4>
+            <div id="estimatedDifficulty" style="background:#ffc107; color:#333; padding:5px 10px; border-radius:4px; display:inline-block;"></div>
+        </div>
+
+        <div class="result-section">
+            <h4>🤔 难度判断理由</h4>
+            <p id="difficultyReason"></p>
         </div>
 
         <div class="result-section">
@@ -566,7 +568,6 @@ window.addEventListener('DOMContentLoaded', function() {
         solveBtn.addEventListener('click', function() {
             const problem = document.getElementById('problemInput').value.trim();
             const language = document.getElementById('languageSelect').value;
-            const difficulty = document.getElementById('difficultySelect').value;
 
             if (!problem) {
                 alert('请输入算法题描述');
@@ -581,12 +582,12 @@ window.addEventListener('DOMContentLoaded', function() {
             const requestUrl = `${API_BASE_URL}/api/algorithm-solver`;
             console.log("API_BASE_URL:", API_BASE_URL);
             console.log("Request URL:", requestUrl);
-            console.log("Request body:", { problem, language, difficulty });
+            console.log("Request body:", { problem, language });
 
             fetch(requestUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ problem, language, difficulty })
+                body: JSON.stringify({ problem, language })
             })
             .then(response => {
                 console.log("Response status:", response.status);
@@ -603,6 +604,8 @@ window.addEventListener('DOMContentLoaded', function() {
                 const data = response.data;
                 
                 document.getElementById('problemType').textContent = data.problem_type?.join(', ') || '未知';
+                document.getElementById('estimatedDifficulty').textContent = data.estimated_difficulty || '未知';
+                document.getElementById('difficultyReason').textContent = data.difficulty_reason || '-';
                 document.getElementById('coreIdea').textContent = data.core_idea || '-';
                 document.getElementById('dataStructure').textContent = data.data_structure || '-';
                 document.getElementById('timeComplexity').textContent = data.time_complexity || '-';
