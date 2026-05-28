@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-FastAPI 主应用 - AI 测试用例生成 API (Vercel 简化版)
+FastAPI 主应用 - AI 测试用例生成 API + 算法题解生成器 (Vercel 简化版)
 
 功能说明：
 1. 提供 RESTful API 接口，供前端调用生成测试用例
-2. 直接调用 LLM 生成测试用例（暂不使用 RAG）
+2. 提供算法题解生成器接口
 3. 支持跨域请求（CORS）
 4. 环境变量配置，不硬编码敏感信息
 
@@ -16,10 +16,12 @@ FastAPI 主应用 - AI 测试用例生成 API (Vercel 简化版)
 
 import os
 import json
+import re
+from typing import List, Optional, Dict
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from openai import OpenAI
+from pydantic import BaseModel, Field, ValidationError
+from openai import OpenAI, APIError, AuthenticationError, RateLimitError
 
 # 创建 FastAPI 应用
 app = FastAPI(
@@ -133,3 +135,224 @@ JSON 格式示例：
             status_code=500,
             detail=f"生成测试用例失败: {str(e)}"
         )
+
+
+# ========== 算法题解生成器 ==========
+
+class AlgorithmRequest(BaseModel):
+    """算法题解请求模型"""
+    problem: str
+    language: str = "Python"
+    difficulty: str = "medium"
+
+
+def extract_json_from_markdown(text: str) -> str:
+    """从 Markdown 代码块中提取 JSON"""
+    pattern = r'```(?:json)?\s*([\s\S]*?)\s*```'
+    match = re.search(pattern, text)
+    if match:
+        return match.group(1).strip()
+    
+    pattern = r'```\s*([\s\S]*?)\s*```'
+    match = re.search(pattern, text)
+    if match:
+        return match.group(1).strip()
+    
+    return text
+
+
+def parse_json_safely(text: str) -> Optional[dict]:
+    """安全解析 JSON，处理各种异常情况"""
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    
+    extracted = extract_json_from_markdown(text)
+    try:
+        return json.loads(extracted)
+    except json.JSONDecodeError:
+        pass
+    
+    try:
+        fixed = re.sub(r',\s*([}\]])', r'\1', extracted)
+        return json.loads(fixed)
+    except json.JSONDecodeError:
+        pass
+    
+    return None
+
+
+@app.post("/api/algorithm-solver")
+async def algorithm_solver(request: AlgorithmRequest):
+    """
+    AI 算法题解与复杂度分析生成器
+    
+    根据算法题描述生成：
+    - 题目类型识别
+    - 解题思路
+    - 数据结构选择
+    - 参考代码
+    - 复杂度分析
+    - 边界样例
+    - 易错点总结
+    - 优化方案
+    """
+    if not request.problem or not request.problem.strip():
+        return {
+            "success": False,
+            "message": "题目描述不能为空",
+            "data": None
+        }
+    
+    api_key = os.getenv("OPENAI_API_KEY")
+    api_base = os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
+    model_name = os.getenv("MODEL_NAME", "deepseek-chat")
+    
+    if not api_key:
+        return {
+            "success": False,
+            "message": "未配置 OPENAI_API_KEY 环境变量",
+            "data": None
+        }
+    
+    system_prompt = f"""你是一名资深算法工程师和 LeetCode 题解专家。
+你的任务是根据用户输入的算法题描述，生成结构化的算法题解。
+
+## Few-shot 示例（严格参考此格式生成）
+示例输入：
+{{
+  "problem": "给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。",
+  "language": "Python",
+  "difficulty": "easy"
+}}
+
+示例输出：
+{{
+  "problem_type": ["数组", "哈希表"],
+  "core_idea": "使用哈希表记录已经遍历过的元素及其下标，在遍历当前元素时判断 target - nums[i] 是否已经出现。",
+  "data_structure": "使用哈希表（字典），因为需要在 O(1) 平均时间内判断补数是否存在。",
+  "step_by_step_solution": [
+    "1. 初始化一个空哈希表，用于存储元素值到下标的映射。",
+    "2. 遍历数组 nums。",
+    "3. 对每个元素 nums[i]，计算 complement = target - nums[i]。",
+    "4. 如果 complement 已经在哈希表中，返回对应下标和当前下标。",
+    "5. 否则将当前元素和下标存入哈希表。"
+  ],
+  "reference_code": "class Solution:\\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\\n        seen = {{}}\\n        for i, num in enumerate(nums):\\n            need = target - num\\n            if need in seen:\\n                return [seen[need], i]\\n            seen[num] = i\\n        return []",
+  "time_complexity": "O(n)，其中 n 是数组 nums 的长度，需要遍历数组一次。",
+  "space_complexity": "O(n)，最坏情况下需要将 n 个元素存入哈希表。",
+  "edge_cases": [
+    {{"input": "nums = [2,7,11,15], target = 9", "output": "[0,1]", "explanation": "nums[0] + nums[1] = 2 + 7 = 9"}},
+    {{"input": "nums = [3,2,4], target = 6", "output": "[1,2]", "explanation": "nums[1] + nums[2] = 2 + 4 = 6"}},
+    {{"input": "nums = [3,3], target = 6", "output": "[0,1]", "explanation": "nums[0] + nums[1] = 3 + 3 = 6"}}
+  ],
+  "common_mistakes": ["先把当前元素放入哈希表再查找，可能导致同一个元素被使用两次。", "没有考虑数组中存在重复元素的情况。"],
+  "optimization": "暴力解法需要 O(n²) 时间复杂度，使用哈希表可以将时间复杂度优化到 O(n)，空间复杂度为 O(n)。",
+  "rag_context": "未检索到强相关模板，基于通用算法知识生成。"
+}}
+
+## 用户输入
+{{
+  "problem": "{request.problem}",
+  "language": "{request.language}",
+  "difficulty": "{request.difficulty}"
+}}
+
+## 输出要求（必须严格遵守）
+1. 只输出 JSON，不要输出任何其他文字。
+2. 必须包含以下字段：problem_type, core_idea, data_structure, step_by_step_solution, reference_code, time_complexity, space_complexity, edge_cases, common_mistakes, optimization, rag_context。
+3. problem_type 是字符串数组。
+4. step_by_step_solution 是字符串数组。
+5. edge_cases 至少包含 3 个对象，每个对象包含 input, output, explanation 字段。
+6. common_mistakes 是字符串数组。
+7. reference_code 包含完整可运行的代码。
+8. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
+9. rag_context 说明检索结果摘要。
+
+开始输出："""
+
+    try:
+        client = OpenAI(
+            api_key=api_key,
+            base_url=api_base
+        )
+        
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": "请生成算法题解，只输出 JSON。"}
+            ],
+            temperature=0.3,
+            max_tokens=3000,
+            response_format={"type": "json_object"}
+        )
+        
+        result_text = response.choices[0].message.content.strip()
+        result = parse_json_safely(result_text)
+        
+        if result is None:
+            return {
+                "success": False,
+                "message": "无法解析模型输出",
+                "data": None
+            }
+        
+        required_fields = [
+            "problem_type", "core_idea", "data_structure",
+            "step_by_step_solution", "reference_code",
+            "time_complexity", "space_complexity",
+            "edge_cases", "common_mistakes", "optimization", "rag_context"
+        ]
+        
+        for field in required_fields:
+            if field not in result or result[field] is None:
+                result[field] = "" if field not in ["problem_type", "step_by_step_solution", "edge_cases", "common_mistakes"] else []
+        
+        if not isinstance(result["edge_cases"], list):
+            result["edge_cases"] = []
+        else:
+            valid_cases = []
+            for case in result["edge_cases"]:
+                if isinstance(case, dict) and "input" in case and "output" in case:
+                    valid_cases.append({
+                        "input": case.get("input", ""),
+                        "output": case.get("output", ""),
+                        "explanation": case.get("explanation", "")
+                    })
+            result["edge_cases"] = valid_cases
+        
+        if not result["rag_context"]:
+            result["rag_context"] = "未检索到强相关模板，基于通用算法知识生成。"
+        
+        return {
+            "success": True,
+            "message": "算法题解生成成功",
+            "data": result
+        }
+        
+    except AuthenticationError:
+        return {
+            "success": False,
+            "message": "API Key 无效或已过期",
+            "data": None
+        }
+    except RateLimitError:
+        return {
+            "success": False,
+            "message": "API 请求超限，请稍后重试",
+            "data": None
+        }
+    except APIError as e:
+        return {
+            "success": False,
+            "message": f"API 服务异常: {str(e)}",
+            "data": None
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"生成算法题解失败: {str(e)}",
+            "data": None
+        }
