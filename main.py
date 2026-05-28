@@ -146,7 +146,6 @@ class AlgorithmRequest(BaseModel):
     """算法题解请求模型"""
     problem: str
     language: str = "Python"
-    difficulty: str = "medium"
 
 
 def extract_json_from_markdown(text: str) -> str:
@@ -222,17 +221,40 @@ async def algorithm_solver(request: AlgorithmRequest):
     system_prompt = f"""你是一名资深算法工程师和 LeetCode 题解专家。
 你的任务是根据用户输入的算法题描述，生成结构化的算法题解。
 
+## 难度判断规则
+你需要根据算法题描述自动判断题目难度，难度分为：简单、中等、困难。
+
+判断标准：
+
+简单：
+- 通常只需要一次遍历、简单条件判断、基础哈希表、简单数组操作。
+- 状态设计较少，不涉及复杂递归或多阶段决策。
+- 例如：两数之和、有效括号、合并两个有序数组。
+
+中等：
+- 需要明确的数据结构选择或算法模式。
+- 可能涉及动态规划、滑动窗口、双指针、DFS/BFS、二分查找、回溯等。
+- 需要分析状态转移、搜索过程或边界条件。
+- 例如：最长无重复子串、01背包、岛屿数量、三数之和。
+
+困难：
+- 需要多个算法思想组合。
+- 需要复杂状态设计、优化技巧、剪枝、单调队列、线段树、图论高级算法等。
+- 暴力解和最优解差距较大，复杂度优化难度高。
+- 例如：编辑距离进阶优化、最小覆盖子串、接雨水、困难图论问题。
+
 ## Few-shot 示例（严格参考此格式生成）
 示例输入：
 {{
   "problem": "给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。",
-  "language": "Python",
-  "difficulty": "easy"
+  "language": "Python"
 }}
 
 示例输出：
 {{
   "problem_type": ["数组", "哈希表"],
+  "estimated_difficulty": "简单",
+  "difficulty_reason": "只需要一次遍历和哈希表即可解决，属于经典的数组+哈希表问题。",
   "core_idea": "使用哈希表记录已经遍历过的元素及其下标，在遍历当前元素时判断 target - nums[i] 是否已经出现。",
   "data_structure": "使用哈希表（字典），因为需要在 O(1) 平均时间内判断补数是否存在。",
   "step_by_step_solution": [
@@ -258,20 +280,21 @@ async def algorithm_solver(request: AlgorithmRequest):
 ## 用户输入
 {{
   "problem": "{request.problem}",
-  "language": "{request.language}",
-  "difficulty": "{request.difficulty}"
+  "language": "{request.language}"
 }}
 
 ## 输出要求（必须严格遵守）
 1. 只输出 JSON，不要输出任何其他文字。
-2. 必须包含以下字段：problem_type, core_idea, data_structure, step_by_step_solution, reference_code, time_complexity, space_complexity, edge_cases, common_mistakes, optimization, rag_context。
+2. 必须包含以下字段：problem_type, estimated_difficulty, difficulty_reason, core_idea, data_structure, step_by_step_solution, reference_code, time_complexity, space_complexity, edge_cases, common_mistakes, optimization, rag_context。
 3. problem_type 是字符串数组。
-4. step_by_step_solution 是字符串数组。
-5. edge_cases 至少包含 3 个对象，每个对象包含 input, output, explanation 字段。
-6. common_mistakes 是字符串数组。
-7. reference_code 包含完整可运行的代码。
-8. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
-9. rag_context 说明检索结果摘要。
+4. estimated_difficulty 取值为：简单、中等、困难。
+5. difficulty_reason 解释为什么属于该难度。
+6. step_by_step_solution 是字符串数组。
+7. edge_cases 至少包含 3 个对象，每个对象包含 input, output, explanation 字段。
+8. common_mistakes 是字符串数组。
+9. reference_code 包含完整可运行的代码。
+10. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
+11. rag_context 说明检索结果摘要。
 
 开始输出："""
 
@@ -303,9 +326,9 @@ async def algorithm_solver(request: AlgorithmRequest):
             }
         
         required_fields = [
-            "problem_type", "core_idea", "data_structure",
-            "step_by_step_solution", "reference_code",
-            "time_complexity", "space_complexity",
+            "problem_type", "estimated_difficulty", "difficulty_reason",
+            "core_idea", "data_structure", "step_by_step_solution",
+            "reference_code", "time_complexity", "space_complexity",
             "edge_cases", "common_mistakes", "optimization", "rag_context"
         ]
         
