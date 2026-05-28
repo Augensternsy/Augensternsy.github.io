@@ -502,7 +502,13 @@
 
         <div class="result-section">
             <h4>💻 参考代码</h4>
-            <pre><code id="referenceCode"></code></pre>
+            <div id="codeCard" class="code-card">
+                <div class="code-card-header">
+                    <span id="codeLanguage">Python</span>
+                    <button id="copyCodeBtn" class="copy-btn" onclick="copyCode()">📋 复制代码</button>
+                </div>
+                <pre><code id="referenceCode"></code></pre>
+            </div>
         </div>
 
         <div style="display: flex; gap: 20px;">
@@ -531,9 +537,9 @@
             <p id="optimization"></p>
         </div>
 
-        <div class="result-section">
-            <h4>📚 RAG 检索上下文</h4>
-            <div id="ragContext" style="background:#e9ecef; padding:10px; border-radius:4px; display:none;"></div>
+        <div class="result-section" style="display:none;" id="ragSection">
+            <h4>📚 参考算法模板</h4>
+            <div id="ragContext" class="rag-context"></div>
         </div>
     </div>
 </div>
@@ -552,11 +558,88 @@ button:hover { background: #0056b3; }
 .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; }
 .result-section { margin-bottom: 20px; }
 .result-section h4 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
-pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; border: 1px solid #ddd; }
 ul { padding-left: 20px; }
+
+/* 代码卡片样式 */
+.code-card {
+    margin-top: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #333;
+    background: #1e1e1e;
+}
+.code-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+.code-card pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    background: #1e1e1e;
+}
+.code-card code {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #f8f8f2;
+    white-space: pre;
+}
+.copy-btn {
+    background: #4a4a4a !important;
+    color: #fff !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    width: auto !important;
+    border: 1px solid #666 !important;
+}
+.copy-btn:hover {
+    background: #666 !important;
+}
+
+/* RAG 上下文样式 */
+.rag-context {
+    background: #f5f5f5;
+    padding: 12px 16px;
+    border-radius: 6px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    border-left: 3px solid #ccc;
+}
 </style>
 
 <script>
+let currentCode = '';
+
+function copyCode() {
+    const btn = document.getElementById('copyCodeBtn');
+    if (!currentCode) {
+        btn.textContent = '暂无代码';
+        return;
+    }
+    
+    navigator.clipboard.writeText(currentCode).then(() => {
+        const oldText = btn.textContent;
+        btn.textContent = '✅ 已复制';
+        setTimeout(() => {
+            btn.textContent = oldText;
+        }, 1500);
+    }).catch(err => {
+        console.error('复制失败', err);
+        btn.textContent = '复制失败';
+        setTimeout(() => {
+            btn.textContent = '📋 复制代码';
+        }, 1500);
+    });
+}
+
 window.addEventListener('DOMContentLoaded', function() {
     const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
     const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
@@ -611,7 +694,12 @@ window.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('timeComplexity').textContent = data.time_complexity || '-';
                 document.getElementById('spaceComplexity').textContent = data.space_complexity || '-';
                 document.getElementById('optimization').textContent = data.optimization || '-';
-                document.getElementById('referenceCode').textContent = data.reference_code || '暂无代码';
+                
+                const codeElement = document.getElementById('referenceCode');
+                const languageElement = document.getElementById('codeLanguage');
+                currentCode = data.reference_code || '';
+                codeElement.textContent = currentCode || '暂无参考代码';
+                languageElement.textContent = language;
                 
                 const steps = document.getElementById('steps');
                 steps.innerHTML = '';
@@ -637,12 +725,19 @@ window.addEventListener('DOMContentLoaded', function() {
                     mistakes.appendChild(li);
                 });
 
+                const ragSection = document.getElementById('ragSection');
                 const rag = document.getElementById('ragContext');
-                if (data.rag_context) {
-                    rag.textContent = data.rag_context;
-                    rag.style.display = 'block';
+                if (data.rag_context && data.rag_context.trim()) {
+                    let ragText = data.rag_context;
+                    if (ragText.includes('未检索到') || ragText.includes('未匹配到')) {
+                        ragText = '系统未匹配到强相关算法模板，本次基于通用算法知识生成。';
+                    } else {
+                        ragText = '系统参考了：' + ragText;
+                    }
+                    rag.textContent = ragText;
+                    ragSection.style.display = 'block';
                 } else {
-                    rag.style.display = 'none';
+                    ragSection.style.display = 'none';
                 }
 
                 document.getElementById('result').style.display = 'block';
