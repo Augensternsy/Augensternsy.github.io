@@ -535,6 +535,68 @@
         <div class="result-section">
             <h4>⬆️ 优化方案</h4>
             <p id="optimization"></p>
+            <button id="generateOptimizedBtn" class="optimize-btn">🚀 生成优化版题解</button>
+        </div>
+
+        <!-- 优化版题解区域 -->
+        <div id="optimizedResult" style="display:none;" class="card">
+            <h3 style="color:#00b96b; margin-bottom:20px;">🚀 优化版完整题解</h3>
+            
+            <div class="result-section">
+                <h4>💡 优化思路</h4>
+                <p id="optimizedCoreIdea"></p>
+            </div>
+
+            <div class="result-section">
+                <h4>⚖️ 优化前后对比</h4>
+                <div id="comparison" style="background:#f5f5f5; padding:15px; border-radius:8px;">
+                    <p><strong>优化前：</strong><span id="comparisonBefore"></span></p>
+                    <p><strong>优化后：</strong><span id="comparisonAfter"></span></p>
+                    <p><strong>优化收益：</strong><span id="comparisonImprovement"></span></p>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h4>💻 优化代码</h4>
+                <div id="optimizedCodeCard" class="code-card">
+                    <div class="code-card-header">
+                        <span id="optimizedCodeLanguage">Python</span>
+                        <button id="copyOptimizedCodeBtn" class="copy-btn">📋 复制代码</button>
+                    </div>
+                    <pre><code id="optimizedCode"></code></pre>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:20px;">
+                <div class="result-section" style="flex:1;">
+                    <h4>⏱️ 优化后时间复杂度</h4>
+                    <div id="optimizedTimeComplexity" style="background:#00b96b; color:#fff; padding:5px 10px; border-radius:4px; display:inline-block;"></div>
+                </div>
+                <div class="result-section" style="flex:1;">
+                    <h4>💾 优化后空间复杂度</h4>
+                    <div id="optimizedSpaceComplexity" style="background:#00b96b; color:#fff; padding:5px 10px; border-radius:4px; display:inline-block;"></div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h4>✅ 正确性说明</h4>
+                <p id="correctnessExplanation"></p>
+            </div>
+
+            <div class="result-section">
+                <h4>🎯 适用条件</h4>
+                <p id="applicableConditions"></p>
+            </div>
+
+            <div class="result-section">
+                <h4>⚠️ 优化版易错点</h4>
+                <ul id="optimizedCommonMistakes"></ul>
+            </div>
+
+            <div class="result-section">
+                <h4>📝 优化总结</h4>
+                <p id="optimizationSummary"></p>
+            </div>
         </div>
 
         <div class="result-section" style="display:none;" id="ragSection">
@@ -613,10 +675,44 @@ ul { padding-left: 20px; }
     line-height: 1.6;
     border-left: 3px solid #ccc;
 }
+
+/* 优化按钮样式 */
+.optimize-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 14px !important;
+    padding: 10px 18px !important;
+    min-width: 160px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, #1677ff, #00b96b) !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.25) !important;
+    transition: all 0.2s ease !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.optimize-btn:hover {
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
+}
+
+.optimize-btn:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
 </style>
 
 <script>
 let currentCode = '';
+let currentOptimizedCode = '';
+let currentProblem = '';
+let currentLanguage = 'Python';
 
 function copyCode() {
     const btn = document.getElementById('copyCodeBtn');
@@ -640,6 +736,110 @@ function copyCode() {
     });
 }
 
+function copyOptimizedCode() {
+    const btn = document.getElementById('copyOptimizedCodeBtn');
+    if (!currentOptimizedCode) {
+        btn.textContent = '暂无代码';
+        return;
+    }
+    
+    navigator.clipboard.writeText(currentOptimizedCode).then(() => {
+        const oldText = btn.textContent;
+        btn.textContent = '✅ 已复制';
+        setTimeout(() => {
+            btn.textContent = oldText;
+        }, 1500);
+    }).catch(err => {
+        console.error('复制失败', err);
+        btn.textContent = '复制失败';
+        setTimeout(() => {
+            btn.textContent = '📋 复制代码';
+        }, 1500);
+    });
+}
+
+function generateOptimizedSolution() {
+    const btn = document.getElementById('generateOptimizedBtn');
+    const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
+    const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
+        ? "http://127.0.0.1:8000"
+        : PRODUCTION_API_BASE_URL;
+
+    const oldBtnText = btn.textContent;
+    btn.textContent = '正在生成优化版题解...';
+    btn.disabled = true;
+    document.getElementById('optimizedResult').style.display = 'none';
+    document.getElementById('error').style.display = 'none';
+
+    const requestUrl = `${API_BASE_URL}/api/algorithm-solver`;
+    const requestBody = { 
+        problem: currentProblem, 
+        language: currentLanguage,
+        mode: 'optimized'
+    };
+    
+    console.log("优化版请求体:", requestBody);
+    console.log("Request URL:", requestUrl);
+    
+    fetch(requestUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(response => {
+        if (!response.success) {
+            throw new Error(response.message || '生成失败');
+        }
+        const data = response.data;
+        
+        document.getElementById('optimizedCoreIdea').textContent = data.optimized_core_idea || '-';
+        document.getElementById('comparisonBefore').textContent = data.comparison?.before || '-';
+        document.getElementById('comparisonAfter').textContent = data.comparison?.after || '-';
+        document.getElementById('comparisonImprovement').textContent = data.comparison?.improvement || '-';
+        
+        const optimizedCodeElement = document.getElementById('optimizedCode');
+        const optimizedLanguageElement = document.getElementById('optimizedCodeLanguage');
+        currentOptimizedCode = data.optimized_code || '';
+        optimizedCodeElement.textContent = currentOptimizedCode || '暂无优化代码';
+        optimizedLanguageElement.textContent = currentLanguage;
+        
+        document.getElementById('optimizedTimeComplexity').textContent = data.optimized_time_complexity || '-';
+        document.getElementById('optimizedSpaceComplexity').textContent = data.optimized_space_complexity || '-';
+        document.getElementById('correctnessExplanation').textContent = data.correctness_explanation || '-';
+        document.getElementById('applicableConditions').textContent = data.applicable_conditions || '-';
+        document.getElementById('optimizationSummary').textContent = data.optimization_summary || '-';
+        
+        const optimizedMistakes = document.getElementById('optimizedCommonMistakes');
+        optimizedMistakes.innerHTML = '';
+        (data.optimized_common_mistakes || []).forEach((m, i) => {
+            const li = document.createElement('li');
+            li.textContent = `注意点 ${i+1}: ${m}`;
+            optimizedMistakes.appendChild(li);
+        });
+        
+        document.getElementById('optimizedResult').style.display = 'block';
+    })
+    .catch(err => {
+        console.error("请求失败:", err);
+        let errorMsg = err.message || '未知错误';
+        if (err.message.includes('Failed to fetch') || err.message.includes('net::ERR')) {
+            errorMsg = '无法连接到API服务，请检查：\n1. Vercel后端是否已部署\n2. 网络连接是否正常\n3. API地址是否正确';
+        }
+        document.getElementById('errorMsg').textContent = errorMsg;
+        document.getElementById('error').style.display = 'block';
+    })
+    .finally(() => {
+        btn.textContent = oldBtnText;
+        btn.disabled = false;
+    });
+}
+
 window.addEventListener('DOMContentLoaded', function() {
     const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
     const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
@@ -647,6 +847,17 @@ window.addEventListener('DOMContentLoaded', function() {
         : PRODUCTION_API_BASE_URL;
 
     const solveBtn = document.getElementById('solveBtn');
+    const generateOptimizedBtn = document.getElementById('generateOptimizedBtn');
+    const copyOptimizedCodeBtn = document.getElementById('copyOptimizedCodeBtn');
+
+    if (generateOptimizedBtn) {
+        generateOptimizedBtn.addEventListener('click', generateOptimizedSolution);
+    }
+
+    if (copyOptimizedCodeBtn) {
+        copyOptimizedCodeBtn.addEventListener('click', copyOptimizedCode);
+    }
+
     if (solveBtn) {
         solveBtn.addEventListener('click', function() {
             const problem = document.getElementById('problemInput').value.trim();
@@ -657,20 +868,25 @@ window.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // 保存当前题目和语言
+            currentProblem = problem;
+            currentLanguage = language;
+
             solveBtn.style.display = 'none';
             document.getElementById('loading').style.display = 'block';
             document.getElementById('result').style.display = 'none';
+            document.getElementById('optimizedResult').style.display = 'none';
             document.getElementById('error').style.display = 'none';
 
             const requestUrl = `${API_BASE_URL}/api/algorithm-solver`;
             console.log("API_BASE_URL:", API_BASE_URL);
             console.log("Request URL:", requestUrl);
-            console.log("Request body:", { problem, language });
+            console.log("Request body:", { problem, language, mode: 'standard' });
 
             fetch(requestUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ problem, language })
+                body: JSON.stringify({ problem, language, mode: 'standard' })
             })
             .then(response => {
                 console.log("Response status:", response.status);
@@ -694,6 +910,23 @@ window.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('timeComplexity').textContent = data.time_complexity || '-';
                 document.getElementById('spaceComplexity').textContent = data.space_complexity || '-';
                 document.getElementById('optimization').textContent = data.optimization || '-';
+                
+                // 检查是否有优化方案
+                const optimizationText = data.optimization || '';
+                const generateOptimizedBtn = document.getElementById('generateOptimizedBtn');
+                const shouldShowOptimizeButton = optimizationText && optimizationText.trim() && optimizationText !== '-';
+                
+                console.log("标准题解数据:", data);
+                console.log("是否显示优化按钮:", shouldShowOptimizeButton);
+                console.log("优化方案内容:", optimizationText);
+                
+                if (shouldShowOptimizeButton) {
+                    generateOptimizedBtn.style.display = 'inline-flex';
+                    generateOptimizedBtn.style.visibility = 'visible';
+                    generateOptimizedBtn.style.opacity = '1';
+                } else {
+                    generateOptimizedBtn.style.display = 'none';
+                }
                 
                 const codeElement = document.getElementById('referenceCode');
                 const languageElement = document.getElementById('codeLanguage');
