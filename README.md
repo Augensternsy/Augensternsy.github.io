@@ -143,19 +143,24 @@ Content-Type: application/json
 
 ### 模块三：AI 算法题解与复杂度分析生成器
 
-**功能描述**：基于 FastAPI + DeepSeek + LangChain RAG 开发的 AI 算法题解生成器，支持根据算法题描述生成解题思路、数据结构选择、参考代码、复杂度分析与边界样例。
+**功能描述**：基于 FastAPI + DeepSeek + 轻量级向量检索 RAG 开发的 AI 算法题解生成器，支持根据算法题描述生成解题思路、数据结构选择、参考代码、复杂度分析与边界样例。
 
 **核心特性**：
+- ✅ **轻量级向量检索 RAG**：OpenAI Embedding + 余弦相似度，无需外部向量数据库
+- ✅ **关键词检索兜底**：双层召回策略，确保系统稳定性
 - ✅ **RAG 算法知识库**：包含 13 种常见算法题型模板
 - ✅ **结构化输出**：标准 JSON 格式，包含完整题解字段
 - ✅ **多语言支持**：Python/Java/C++/JavaScript
 - ✅ **复杂度分析**：自动生成时间/空间复杂度分析
+- ✅ **优化版题解**：支持点击按钮生成优化版题解
 - ✅ **边界样例**：至少 3 个测试用例覆盖
 - ✅ **前端集成**：独立交互页面 `/algorithm-solver`
 
 **技术架构**：
 ```
-算法题描述 → RAG 题型检索 → 结构化 Prompt → DeepSeek LLM → 标准化题解
+算法题描述 → 文档切分 → Embedding 向量化 → Top-K 相似度检索 → 结构化 Prompt → DeepSeek LLM → 标准化题解
+                              ↓
+                         关键词检索兜底
 ```
 
 **API 接口**：
@@ -166,14 +171,16 @@ Content-Type: application/json
 {
 "problem": "给定一个整数数组 nums 和一个目标值 target，请返回和为 target 的两个整数下标",
 "language": "Python",
-"difficulty": "easy"
+"mode": "standard"  // standard 或 optimized
 }
 ```
 
-**响应字段**：
+**响应字段**（标准模式）：
 | 字段 | 说明 |
 |------|------|
 | problem_type | 题目类型列表 |
+| estimated_difficulty | 估算难度 |
+| difficulty_reason | 难度判断理由 |
 | core_idea | 解题核心思路 |
 | data_structure | 数据结构选择 |
 | step_by_step_solution | 步骤解析 |
@@ -183,7 +190,20 @@ Content-Type: application/json
 | edge_cases | 边界样例（≥3个） |
 | common_mistakes | 易错点列表 |
 | optimization | 优化方案 |
-| rag_context | RAG 检索上下文 |
+| rag_context | RAG 检索到的算法模板 |
+
+**响应字段**（优化模式）：
+| 字段 | 说明 |
+|------|------|
+| optimized_core_idea | 优化版核心思路 |
+| comparison | 优化前后对比（before/after/improvement） |
+| optimized_code | 优化后代码 |
+| optimized_time_complexity | 优化后时间复杂度 |
+| optimized_space_complexity | 优化后空间复杂度 |
+| correctness_explanation | 正确性说明 |
+| applicable_conditions | 适用条件 |
+| optimized_common_mistakes | 优化版易错点 |
+| optimization_summary | 优化总结 |
 
 ---
 

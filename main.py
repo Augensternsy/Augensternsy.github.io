@@ -24,6 +24,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ValidationError
 from openai import OpenAI, APIError, AuthenticationError, RateLimitError
 
+# 导入 RAG 模块
+from algorithm_rag import get_rag
+
 load_dotenv()
 
 # 创建 FastAPI 应用
@@ -146,6 +149,7 @@ class AlgorithmRequest(BaseModel):
     """算法题解请求模型"""
     problem: str
     language: str = "Python"
+    mode: str = "standard"  # "standard" 或 "optimized"
 
 
 def extract_json_from_markdown(text: str) -> str:
@@ -199,6 +203,10 @@ async def algorithm_solver(request: AlgorithmRequest):
     - 边界样例
     - 易错点总结
     - 优化方案
+    
+    mode 参数：
+    - standard: 生成标准题解（默认）
+    - optimized: 生成优化版题解
     """
     if not request.problem or not request.problem.strip():
         return {
@@ -218,8 +226,82 @@ async def algorithm_solver(request: AlgorithmRequest):
             "data": None
         }
     
-    system_prompt = f"""你是一名资深算法工程师和 LeetCode 题解专家。
+    # ========== RAG 检索 ==========
+    rag_context = ""
+    rag_template = ""
+    try:
+        rag = get_rag()
+        rag_context, rag_template = rag.get_rag_context(request.problem)
+    except Exception as e:
+        print(f"RAG 检索失败: {e}")
+        rag_context = ""
+        rag_template = ""
+    
+    # 构建 RAG 上下文注入
+    rag_prompt = ""
+    if rag_context:
+        rag_prompt = f"""## 参考知识（从知识库检索）
+以下是与当前题目相关的算法模板知识：
+{rag_context}
+
+请参考以上知识生成更准确的题解。
+"""
+    
+    if request.mode == "optimized":
+        # 优化版模式
+        system_prompt = f"""你是一名资深算法工程师和算法竞赛教练。
+用户已经获得了标准题解，现在希望进一步了解优化方案。
+请根据算法题描述，生成优化版完整题解。
+
+{rag_prompt if rag_context else ''}
+
+## Few-shot 示例（严格参考此格式生成）
+示例输入：
+{{
+  "problem": "给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。",
+  "language": "Python"
+}}
+
+示例输出：
+{{
+  "optimized_core_idea": "本题已经是最优解法，无需进一步优化。",
+  "comparison": {{
+    "before": "O(n²) 时间复杂度的暴力解法，双重循环遍历所有可能。",
+    "after": "O(n) 时间复杂度的哈希表解法，只需要一次遍历。",
+    "improvement": "时间复杂度从 O(n²) 优化到 O(n)，空间复杂度从 O(1) 变为 O(n)。"
+  }},
+  "optimized_code": "class Solution:\\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\\n        seen = {{}}\\n        for i, num in enumerate(nums):\\n            need = target - num\\n            if need in seen:\\n                return [seen[need], i]\\n            seen[num] = i\\n        return []",
+  "optimized_time_complexity": "O(n)，其中 n 是数组 nums 的长度，只需要一次遍历。",
+  "optimized_space_complexity": "O(n)，最坏情况下需要存储所有 n 个元素到哈希表。",
+  "correctness_explanation": "由于每个元素只访问一次，且通过哈希表在 O(1) 时间内查找补数，算法正确且高效。",
+  "applicable_conditions": "适用于需要在数组中找两数之和的问题，对数据类型没有特殊要求。",
+  "optimized_common_mistakes": ["先将元素存入哈希表再查找，可能导致同一个元素被使用两次。", "没有考虑数组中可能存在重复元素的情况。"],
+  "optimization_summary": "本题当前解法已经是时间最优，无需进一步优化。"
+}}
+
+## 用户输入
+{{
+  "problem": "{request.problem}",
+  "language": "{request.language}"
+}}
+
+## 输出要求（必须严格遵守）
+1. 只输出 JSON，不要输出任何其他文字。
+2. 必须包含以下字段：optimized_core_idea, comparison, optimized_code, optimized_time_complexity, optimized_space_complexity, correctness_explanation, applicable_conditions, optimized_common_mistakes, optimization_summary。
+3. comparison 是对象，包含 before, after, improvement 三个字符串字段。
+4. optimized_code 包含优化后完整可运行的代码。
+5. optimized_common_mistakes 是字符串数组。
+6. 如果题目已经是最优解，也要完整生成所有字段，说明当前解法已经是最优。
+7. 如果题目有明显优化空间（如空间优化、时间优化等），必须详细说明。
+
+开始输出："""
+        max_tokens = 3000
+    else:
+        # 标准模式
+        system_prompt = f"""你是一名资深算法工程师和 LeetCode 题解专家。
 你的任务是根据用户输入的算法题描述，生成结构化的算法题解。
+
+{rag_prompt if rag_context else ''}
 
 ## 难度判断规则
 你需要根据算法题描述自动判断题目难度，难度分为：简单、中等、困难。
@@ -297,6 +379,7 @@ async def algorithm_solver(request: AlgorithmRequest):
 11. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
 
 开始输出："""
+        max_tokens = 3000
 
     try:
         client = OpenAI(
@@ -311,7 +394,7 @@ async def algorithm_solver(request: AlgorithmRequest):
                 {"role": "user", "content": "请生成算法题解，只输出 JSON。"}
             ],
             temperature=0.3,
-            max_tokens=3000,
+            max_tokens=max_tokens,
             response_format={"type": "json_object"}
         )
         
@@ -325,32 +408,52 @@ async def algorithm_solver(request: AlgorithmRequest):
                 "data": None
             }
         
-        required_fields = [
-            "problem_type", "estimated_difficulty", "difficulty_reason",
-            "core_idea", "data_structure", "step_by_step_solution",
-            "reference_code", "time_complexity", "space_complexity",
-            "edge_cases", "common_mistakes", "optimization", "rag_context"
-        ]
-        
-        for field in required_fields:
-            if field not in result or result[field] is None:
-                result[field] = "" if field not in ["problem_type", "step_by_step_solution", "edge_cases", "common_mistakes"] else []
-        
-        if not isinstance(result["edge_cases"], list):
-            result["edge_cases"] = []
+        if request.mode == "optimized":
+            # 优化版验证
+            required_fields = [
+                "optimized_core_idea", "comparison", "optimized_code",
+                "optimized_time_complexity", "optimized_space_complexity",
+                "correctness_explanation", "applicable_conditions",
+                "optimized_common_mistakes", "optimization_summary"
+            ]
+            for field in required_fields:
+                if field not in result or result[field] is None:
+                    if field == "comparison":
+                        result[field] = {"before": "", "after": "", "improvement": ""}
+                    elif field == "optimized_common_mistakes":
+                        result[field] = []
+                    else:
+                        result[field] = ""
+            if not isinstance(result.get("optimized_common_mistakes"), list):
+                result["optimized_common_mistakes"] = []
         else:
-            valid_cases = []
-            for case in result["edge_cases"]:
-                if isinstance(case, dict) and "input" in case and "output" in case:
-                    valid_cases.append({
-                        "input": case.get("input", ""),
-                        "output": case.get("output", ""),
-                        "explanation": case.get("explanation", "")
-                    })
-            result["edge_cases"] = valid_cases
-        
-        if not result["rag_context"]:
-            result["rag_context"] = ""
+            # 标准模式验证
+            required_fields = [
+                "problem_type", "estimated_difficulty", "difficulty_reason",
+                "core_idea", "data_structure", "step_by_step_solution",
+                "reference_code", "time_complexity", "space_complexity",
+                "edge_cases", "common_mistakes", "optimization", "rag_context"
+            ]
+            for field in required_fields:
+                if field not in result or result[field] is None:
+                    result[field] = "" if field not in ["problem_type", "step_by_step_solution", "edge_cases", "common_mistakes"] else []
+            if not isinstance(result["edge_cases"], list):
+                result["edge_cases"] = []
+            else:
+                valid_cases = []
+                for case in result["edge_cases"]:
+                    if isinstance(case, dict) and "input" in case and "output" in case:
+                        valid_cases.append({
+                            "input": case.get("input", ""),
+                            "output": case.get("output", ""),
+                            "explanation": case.get("explanation", "")
+                        })
+                result["edge_cases"] = valid_cases
+            if not result["rag_context"]:
+                result["rag_context"] = ""
+            # 使用 RAG 检索到的模板
+            if rag_template and request.mode != "optimized":
+                result["rag_context"] = rag_template
         
         return {
             "success": True,

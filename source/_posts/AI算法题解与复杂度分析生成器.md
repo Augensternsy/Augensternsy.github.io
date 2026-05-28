@@ -1,6 +1,6 @@
 ---
-title: 基于 FastAPI + DeepSeek + LangChain 的 AI 算法题解与复杂度分析生成器
-date: 2026-05-21 10:00:00
+title: 基于 FastAPI + DeepSeek + 轻量级向量检索 RAG 的 AI 算法题解与复杂度分析生成器
+date: 2026-05-29 10:00:00
 top: true
 categories:
   - 技术分享
@@ -34,7 +34,7 @@ tags:
 
 - **FastAPI**：高性能 Python Web 框架，用于构建 API 服务
 - **DeepSeek**：开源大语言模型，提供代码生成能力
-- **LangChain**：构建 LLM 应用的框架，提供文档处理和 RAG 能力
+- **轻量级向量检索 RAG**：OpenAI Embedding + 余弦相似度，无需外部向量数据库
 - **Mangum**：AWS Lambda/API Gateway 适配器，支持 Vercel Serverless 部署
 - **Pydantic**：数据验证和序列化
 
@@ -43,18 +43,37 @@ tags:
 ```
 用户请求 → FastAPI → 算法题解生成器 → DeepSeek API
                                  ↓
-                          RAG 知识库检索
-                          (算法题型模板)
+                          轻量级 RAG 检索
+                              ↓
+                ┌──────────────┴───────────────┐
+                ↓                              ↓
+         Embedding 向量化检索          关键词检索兜底
+                ↓                              ↓
+         余弦相似度 Top-K               模板匹配
 ```
 
 ### 核心流程
 
-1. **输入处理**：接收算法题描述、语言选择和难度级别
-2. **RAG 检索**：根据题目描述从知识库中检索相关算法模板
+1. **输入处理**：接收算法题描述、语言选择和生成模式
+2. **RAG 检索**：根据题目描述从知识库中检索相关算法模板（优先向量检索，失败则关键词兜底）
 3. **Prompt 构建**：结合检索结果构建结构化提示词
 4. **模型调用**：调用 DeepSeek API 生成题解
 5. **结果解析**：解析 JSON 响应，确保字段完整
 6. **结果返回**：返回标准化的题解数据
+
+## 轻量级向量检索 RAG 设计
+
+我选择了纯 Python 实现的轻量级向量检索方案，无需引入 FAISS、Chroma 等重型依赖，非常适合 Vercel Serverless 环境。
+
+### RAG 架构特点
+
+1. **文档切分**：按 Markdown 标题切分知识库文档
+2. **Embedding 向量化**：使用 OpenAI Embedding API
+3. **余弦相似度**：纯 Python 实现相似度计算
+4. **双层召回策略**：
+   - 优先：Embedding 语义检索
+   - 兜底：关键词匹配检索
+5. **内存缓存**：向量缓存在内存中，首次加载后快速检索
 
 ## RAG 知识库设计
 
@@ -63,20 +82,18 @@ tags:
 | 题型 | 典型题目 | 核心思路 |
 |------|----------|----------|
 | 数组与哈希表 | 两数之和 | O(1) 查找 |
-| 双指针 | 三数之和 | 两端向中间移动 |
+| 双指针与排序 | 三数之和 | 两端向中间移动 |
 | 滑动窗口 | 最长无重复子串 | 动态维护窗口边界 |
-| 栈与单调栈 | 每日温度 | 维护单调序列 |
-| 队列与优先队列 | Top K 问题 | 堆排序 |
+| 栈与单调栈 | 接雨水 | 维护单调序列 |
+| 链表操作 | 反转链表 | 指针操作 |
+| 树与二叉树 | 前中后序遍历 | 递归/迭代 |
 | 二分查找 | 搜索旋转数组 | 对数时间查找 |
-| 动态规划 | 爬楼梯 | 状态转移方程 |
+| 动态规划 - 背包问题 | 01背包 | 状态转移方程 |
+| 动态规划 - 其他问题 | 最长递增子序列 | 状态转移 |
+| 图论 - DFS与BFS | 岛屿数量 | 图遍历 |
 | 贪心算法 | 跳跃游戏 | 局部最优选择 |
-| DFS/BFS | 岛屿数量 | 图遍历 |
-| 图论基础 | 拓扑排序 | 课程表问题 |
-| 回溯算法 | 全排列 | 枚举所有解 |
-| 前缀和 | 区域和检索 | 预处理优化 |
-| 并查集 | 省份数量 | 动态连通性 |
 
-每个模板包含：题型特点、常见关键词、适用场景、核心思路、常用数据结构、复杂度规律、典型题目和易错点。
+每个模板包含：题型特点、典型题目、解题思路、数据结构选择。
 
 ## Prompt 设计
 
@@ -85,15 +102,15 @@ tags:
 ```
 你是一名资深算法工程师和 LeetCode 题解专家。
 
-## RAG 检索到的算法知识库内容
-{context_str}
+## 参考知识（从知识库检索）
+{rag_context}
 
 ## Few-shot 示例
-示例输入：{"problem": "...", "language": "Python", "difficulty": "easy"}
+示例输入：{"problem": "...", "language": "Python", "mode": "standard"}
 示例输出：{"problem_type": [...], "core_idea": "...", ...}
 
 ## 用户输入
-{"problem": "...", "language": "...", "difficulty": "..."}
+{"problem": "...", "language": "...", "mode": "..."}
 
 ## 输出要求
 1. 只输出 JSON，不要输出任何其他文字
@@ -113,13 +130,15 @@ tags:
 |------|------|------|------|
 | problem | string | 是 | 算法题描述 |
 | language | string | 否 | 编程语言（默认 Python） |
-| difficulty | string | 否 | 难度级别（默认 medium） |
+| mode | string | 否 | 生成模式（standard/optimized，默认 standard） |
 
-### 响应字段
+### 响应字段（标准模式）
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | problem_type | array | 题目类型列表 |
+| estimated_difficulty | string | 估算难度 |
+| difficulty_reason | string | 难度判断理由 |
 | core_idea | string | 解题核心思路 |
 | data_structure | string | 数据结构选择 |
 | step_by_step_solution | array | 步骤解析 |
@@ -129,25 +148,41 @@ tags:
 | edge_cases | array | 边界样例（至少3个） |
 | common_mistakes | array | 易错点列表 |
 | optimization | string | 优化方案 |
-| rag_context | string | RAG 检索上下文 |
+| rag_context | string | RAG 检索到的算法模板 |
+
+### 响应字段（优化模式）
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| optimized_core_idea | string | 优化版核心思路 |
+| comparison | object | 优化前后对比（before/after/improvement） |
+| optimized_code | string | 优化后代码 |
+| optimized_time_complexity | string | 优化后时间复杂度 |
+| optimized_space_complexity | string | 优化后空间复杂度 |
+| correctness_explanation | string | 正确性说明 |
+| applicable_conditions | string | 适用条件 |
+| optimized_common_mistakes | array | 优化版易错点 |
+| optimization_summary | string | 优化总结 |
 
 ## 示例输入输出
 
-### 输入
+### 标准模式输入
 
 ```json
 {
   "problem": "给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。",
   "language": "Python",
-  "difficulty": "easy"
+  "mode": "standard"
 }
 ```
 
-### 输出
+### 标准模式输出
 
 ```json
 {
   "problem_type": ["数组", "哈希表"],
+  "estimated_difficulty": "easy",
+  "difficulty_reason": "只需一次遍历和简单哈希表操作",
   "core_idea": "使用哈希表记录已经遍历过的元素及其下标...",
   "data_structure": "使用哈希表（字典）...",
   "step_by_step_solution": ["1. 初始化空哈希表...", "..."],
@@ -160,7 +195,37 @@ tags:
   ],
   "common_mistakes": ["先放入哈希表再查找...", "..."],
   "optimization": "暴力解法 O(n²) → 哈希表 O(n)",
-  "rag_context": "检索到数组与哈希表模板"
+  "rag_context": "数组与哈希表"
+}
+```
+
+### 优化模式输入
+
+```json
+{
+  "problem": "给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。",
+  "language": "Python",
+  "mode": "optimized"
+}
+```
+
+### 优化模式输出
+
+```json
+{
+  "optimized_core_idea": "本题已经是最优解法，无需进一步优化",
+  "comparison": {
+    "before": "O(n²) 时间复杂度的暴力解法，双重循环遍历所有可能",
+    "after": "O(n) 时间复杂度的哈希表解法，只需要一次遍历",
+    "improvement": "时间复杂度从 O(n²) 优化到 O(n)，空间复杂度从 O(1) 变为 O(n)"
+  },
+  "optimized_code": "class Solution:\n    def twoSum(self, nums, target):\n        ...",
+  "optimized_time_complexity": "O(n)",
+  "optimized_space_complexity": "O(n)",
+  "correctness_explanation": "由于每个元素只访问一次，且通过哈希表在 O(1) 时间内查找补数，算法正确且高效",
+  "applicable_conditions": "适用于需要在数组中找两数之和的问题",
+  "optimized_common_mistakes": ["先放入哈希表再查找...", "..."],
+  "optimization_summary": "本题当前解法已经是时间最优，无需进一步优化"
 }
 ```
 
@@ -173,6 +238,7 @@ tags:
 3. **认证失败**：捕获 AuthenticationError，提示 Key 无效
 4. **请求超限**：捕获 RateLimitError，提示稍后重试
 5. **JSON 解析失败**：多层解析策略，从 Markdown 代码块中提取
+6. **RAG 检索失败**：自动降级到关键词检索，确保系统稳定
 
 ### JSON 稳定性保障
 
@@ -184,11 +250,12 @@ tags:
 
 ## 项目亮点
 
-1. **纯内存向量检索**：无需外部向量数据库，降低部署复杂度
-2. **轻量级依赖**：移除 FAISS，使用纯 Python 实现相似度计算
-3. **标准化输出**：严格的字段验证和格式规范
-4. **可扩展性**：支持多语言代码生成，易于添加新题型模板
-5. **Serverless 友好**：适配 Vercel Serverless 部署环境
+1. **轻量级向量检索 RAG**：OpenAI Embedding + 余弦相似度，无需外部向量数据库
+2. **双层召回策略**：优先语义检索，失败则关键词兜底，确保系统稳定性
+3. **优化版题解**：支持点击按钮生成优化版题解，包含前后对比
+4. **标准化输出**：严格的字段验证和格式规范
+5. **可扩展性**：支持多语言代码生成，易于添加新题型模板
+6. **Serverless 友好**：适配 Vercel Serverless 部署环境
 
 ## 后续可扩展方向
 
