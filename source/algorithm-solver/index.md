@@ -154,8 +154,18 @@ window.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ problem, language, difficulty })
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(response => {
+                if (!response.success) {
+                    throw new Error(response.message || '生成失败');
+                }
+                const data = response.data;
+                
                 document.getElementById('problemType').textContent = data.problem_type?.join(', ') || '未知';
                 document.getElementById('coreIdea').textContent = data.core_idea || '-';
                 document.getElementById('dataStructure').textContent = data.data_structure || '-';
@@ -176,7 +186,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 edgeCases.innerHTML = '';
                 (data.edge_cases || []).forEach((ec, i) => {
                     const li = document.createElement('li');
-                    li.textContent = `样例 ${i+1}: ${ec}`;
+                    li.textContent = `样例 ${i+1}: ${ec.input || ec}`;
                     edgeCases.appendChild(li);
                 });
 
