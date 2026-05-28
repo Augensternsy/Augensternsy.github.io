@@ -2,6 +2,7 @@
 title: AI 算法题解与复杂度分析生成器
 date: 2024-01-01 00:00:00
 type: page
+layout: page
 ---
 
 {% raw %}
