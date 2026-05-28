@@ -15,9 +15,17 @@
 import os
 import re
 import json
-import numpy as np
+import math
 from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
+
+# 尝试导入 numpy，如果失败则使用纯 Python 实现
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    print("警告: numpy 不可用，将使用纯 Python 实现")
 
 
 class AlgorithmRAG:
@@ -32,7 +40,7 @@ class AlgorithmRAG:
         """
         self.knowledge_base_path = knowledge_base_path
         self.chunks: List[Dict] = []
-        self.embeddings: Optional[np.ndarray] = None
+        self.embeddings: Optional[List[List[float]]] = None
         self.keyword_index: Dict[str, List[int]] = {}
         
         # 关键词映射表（用于兜底）
@@ -163,10 +171,10 @@ class AlgorithmRAG:
                 input=texts
             )
             
-            # 提取向量
-            self.embeddings = np.array([
+            # 提取向量（使用列表存储，兼容纯 Python）
+            self.embeddings = [
                 item.embedding for item in response.data
-            ])
+            ]
             
             print(f"Embeddings 生成成功，共 {len(self.embeddings)} 个向量")
             
@@ -174,7 +182,7 @@ class AlgorithmRAG:
             print(f"Embedding 生成失败: {e}")
             self.embeddings = None
     
-    def _get_embedding(self, text: str) -> Optional[np.ndarray]:
+    def _get_embedding(self, text: str) -> Optional[List[float]]:
         """获取单个文本的 Embedding"""
         try:
             if not self.client:
@@ -184,17 +192,24 @@ class AlgorithmRAG:
                 model=self.embedding_model,
                 input=text
             )
-            return np.array(response.data[0].embedding)
+            return response.data[0].embedding
             
         except Exception as e:
             print(f"获取 Embedding 失败: {e}")
             return None
     
-    def _cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
-        """计算余弦相似度"""
-        dot_product = np.dot(vec1, vec2)
-        norm1 = np.linalg.norm(vec1)
-        norm2 = np.linalg.norm(vec2)
+    def _cosine_similarity(self, vec1: List[float], vec2: List[float]) -> float:
+        """计算余弦相似度（纯 Python 实现）"""
+        if len(vec1) != len(vec2):
+            return 0.0
+        
+        dot_product = sum(a * b for a, b in zip(vec1, vec2))
+        norm1 = math.sqrt(sum(a * a for a in vec1))
+        norm2 = math.sqrt(sum(b * b for b in vec2))
+        
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        
         return dot_product / (norm1 * norm2)
     
     def _semantic_search(self, query: str, top_k: int = 3) -> List[Dict]:
@@ -225,15 +240,14 @@ class AlgorithmRAG:
             
             # 排序并取 Top-K
             similarities.sort(key=lambda x: x[0], reverse=True)
-            top_indices = [idx for sim, idx in similarities[:top_k]]
             
             results = []
-            for idx in top_indices:
+            for sim, idx in similarities[:top_k]:
                 chunk = self.chunks[idx]
                 results.append({
                     "title": chunk["title"],
                     "content": chunk["content"],
-                    "similarity": float(similarities[top_indices.index(idx)][0])
+                    "similarity": float(sim)
                 })
             
             return results
