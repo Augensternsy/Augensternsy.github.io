@@ -26,3 +26,6 @@ demo_memory_history.json
 
 # Sensitive config
 config_env.bat
+
+# Pip cache
+.pip_cache/

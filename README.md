@@ -13,12 +13,13 @@
 
 ## 🎯 项目概览
 
-本项目是一个综合性的技术平台，包含三大核心模块：
+本项目是一个综合性的技术平台，包含四大核心模块：
 
 | 模块 | 技术栈 | 功能描述 |
 |------|--------|----------|
 | **个人博客** | Node.js + Hexo + GitHub Actions | 具备 CI/CD 流水线的个人网站，实现自动化发布闭环 |
 | **AI 测试用例生成器** | FastAPI + DeepSeek + LangChain RAG | 基于大语言模型的智能测试用例生成工具，部署于 Vercel Serverless |
+| **AI 算法题解生成器** | FastAPI + DeepSeek + LangChain RAG | 算法题解与复杂度分析生成器，支持多语言代码生成 |
 | **个人数字分身** | Coze 框架 + Prompt 工程 + RAG | 专属智能体，支持联网检索与简历知识库的高精准问答 |
 
 ---
@@ -140,7 +141,53 @@ Content-Type: application/json
 
 ---
 
-### 模块三：个人数字分身（Coze Agent）
+### 模块三：AI 算法题解与复杂度分析生成器
+
+**功能描述**：基于 FastAPI + DeepSeek + LangChain RAG 开发的 AI 算法题解生成器，支持根据算法题描述生成解题思路、数据结构选择、参考代码、复杂度分析与边界样例。
+
+**核心特性**：
+- ✅ **RAG 算法知识库**：包含 13 种常见算法题型模板
+- ✅ **结构化输出**：标准 JSON 格式，包含完整题解字段
+- ✅ **多语言支持**：Python/Java/C++/JavaScript
+- ✅ **复杂度分析**：自动生成时间/空间复杂度分析
+- ✅ **边界样例**：至少 3 个测试用例覆盖
+- ✅ **前端集成**：独立交互页面 `/algorithm-solver`
+
+**技术架构**：
+```
+算法题描述 → RAG 题型检索 → 结构化 Prompt → DeepSeek LLM → 标准化题解
+```
+
+**API 接口**：
+```
+POST /api/algorithm-solver
+Content-Type: application/json
+
+{
+"problem": "给定一个整数数组 nums 和一个目标值 target，请返回和为 target 的两个整数下标",
+"language": "Python",
+"difficulty": "easy"
+}
+```
+
+**响应字段**：
+| 字段 | 说明 |
+|------|------|
+| problem_type | 题目类型列表 |
+| core_idea | 解题核心思路 |
+| data_structure | 数据结构选择 |
+| step_by_step_solution | 步骤解析 |
+| reference_code | 参考代码 |
+| time_complexity | 时间复杂度 |
+| space_complexity | 空间复杂度 |
+| edge_cases | 边界样例（≥3个） |
+| common_mistakes | 易错点列表 |
+| optimization | 优化方案 |
+| rag_context | RAG 检索上下文 |
+
+---
+
+### 模块四：个人数字分身（Coze Agent）
 
 **功能描述**：研发个人数字分身（基于 Coze 框架的专属 Agent），运用 Prompt 工程进行逻辑约束；集成联网检索 Skill 与 RAG 简历知识库，实现针对个人技术栈与履历的高精准问答。
 
@@ -187,18 +234,23 @@ Content-Type: application/json
 .
 ├── source/                        # Hexo 博客源码
 │   ├── _posts/                   # 博客文章
-│   │   └── AI测试用例生成器.md    # AI 工具交互页面
+│   │   ├── AI测试用例生成器.md    # AI 测试用例生成器介绍
+│   │   └── AI算法题解与复杂度分析生成器.md  # 算法题解生成器介绍
 │   ├── about/                    # 关于页面
+│   ├── algorithm-solver/         # 算法题解生成器前端页面
+│   │   └── index.md              # 交互页面
 │   └── ...
 ├── themes/                       # Hexo 主题
 │   └── matery/                   # Matery 主题
 │       └── layout/
 │           └── layout.ejs        # Coze Agent 集成
-├── api-deploy/                   # AI 测试用例生成器 API
+├── api-deploy/                   # AI API 服务
 │   ├── api/
 │   │   └── index.py              # FastAPI 主应用
 │   ├── docs/
-│   │   └── 软件测试规范.md        # RAG 知识库
+│   │   ├── 软件测试规范.md        # 测试用例生成器知识库
+│   │   └── 算法题型知识库.md      # 算法题解生成器知识库
+│   ├── algorithm_solution_generator.py  # 算法题解生成器核心逻辑
 │   ├── requirements.txt          # Python 依赖
 │   └── vercel.json              # Vercel 配置
 ├── .github/
@@ -206,7 +258,7 @@ Content-Type: application/json
 │       └── deploy.yml            # GitHub Actions CI/CD
 ├── _config.yml                   # Hexo 配置
 ├── package.json                  # Node.js 依赖
-├── requirements.txt              # 本地开发依赖
+├── test_algorithm_solver.py      # 算法题解生成器测试脚本
 └── README.md                     # 项目说明
 ```
 

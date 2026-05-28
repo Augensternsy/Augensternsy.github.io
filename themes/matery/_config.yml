@@ -25,6 +25,9 @@ menu:
   AI测试用例:
     url: /2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/
     icon: fas fa-robot
+  AI算法题解:
+    url: /algorithm-solver/
+    icon: fas fa-code
   # 二级菜单写法如下
   #Medias:
   #  icon: fas fa-list
