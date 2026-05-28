@@ -19,8 +19,8 @@
       "dest": "main.py"
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "src": "/",
+      "dest": "main.py"
     }
   ]
 }

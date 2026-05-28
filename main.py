@@ -17,11 +17,14 @@ FastAPI 主应用 - AI 测试用例生成 API + 算法题解生成器 (Vercel �
 import os
 import json
 import re
+from dotenv import load_dotenv
 from typing import List, Optional, Dict
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ValidationError
 from openai import OpenAI, APIError, AuthenticationError, RateLimitError
+
+load_dotenv()
 
 # 创建 FastAPI 应用
 app = FastAPI(
