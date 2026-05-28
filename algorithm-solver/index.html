@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="标签: AI, 程序媛,C++">
+    <meta name="keywords" content="AI 算法题解与复杂度分析生成器, 程序媛,C++">
     <meta name="description" content="2022.1.16创建博客">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>标签: AI | Augensternsy</title>
+    <title>AI 算法题解与复杂度分析生成器 | Augensternsy</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -383,212 +383,719 @@
 
 </header>
 
-    <div class="bg-cover pd-header about-cover">
-    <div class="container">
-    <div class="row">
-    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-        <div class="brand">
-            <div class="title center-align">
-                
-                怪味少女热爱生活中
-                
-            </div>
+    
 
-            <div class="description center-align">
-                
-                <span id="subtitle"></span>
-                <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                <script>
-                    var typed = new Typed("#subtitle", {
-                        strings: [ 
-                            
-                                "愿我成为自己喜欢的样子",
-                            
-                                "It&#39;ll help the luck stick.",
-                            
-                        ],
-                        startDelay: 300,
-                        typeSpeed: 100,
-                        loop: true,
-                        backSpeed: 50,
-                        showCursor: true
-                    });
-                </script>
-                
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">AI 算法题解与复杂度分析生成器</h1>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2024-01-01
+                </div>
+                
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                
+<div class="algorithm-container">
+    <h1 style="text-align:center; color:#007bff; margin-bottom:30px;">AI 算法题解与复杂度分析生成器</h1>
+
+    <div class="card">
+        <div style="margin-bottom: 15px; position: relative; z-index: 100;">
+            <label style="display: block !important; margin-bottom: 5px; font-weight: bold;">算法题描述</label>
+            <textarea id="problemInput" placeholder="请输入算法题目描述，例如：给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的两个整数，并返回它们的数组下标。" style="width: 100% !important; padding: 10px; border: 1px solid #ddd !important; border-radius: 4px; height: 100px; display: block !important; visibility: visible !important; opacity: 1 !important;"></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 15px; position: relative; z-index: 100;">
+            <div style="flex: 1;">
+                <label style="display: block !important; margin-bottom: 5px; font-weight: bold;">编程语言</label>
+                <select id="languageSelect" style="width: 100% !important; padding: 10px; border: 1px solid #ddd !important; border-radius: 4px; height: 45px; background: white !important; color: #333; font-size: 14px; display: block !important; visibility: visible !important; opacity: 1 !important;">
+                    <option value="Python">Python</option>
+                    <option value="Java">Java</option>
+                    <option value="C++">C++</option>
+                    <option value="JavaScript">JavaScript</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label style="display: block !important; margin-bottom: 5px; font-weight: bold;">难度等级</label>
+                <select id="difficultySelect" style="width: 100% !important; padding: 10px; border: 1px solid #ddd !important; border-radius: 4px; height: 45px; background: white !important; color: #333; font-size: 14px; display: block !important; visibility: visible !important; opacity: 1 !important;">
+                    <option value="easy">简单</option>
+                    <option value="medium">中等</option>
+                    <option value="hard">困难</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="solveBtn" style="width: 100% !important; padding: 12px; background: #007bff !important; color: white !important; border: none !important; border-radius: 4px; font-size: 16px; cursor: pointer; display: block !important; position: relative; z-index: 100;">🚀 生成题解</button>
+        
+        <div id="loading" style="display:none;" class="loading">
+            <div>AI 正在分析题目...</div>
+        </div>
+    </div>
+
+    <div id="error" style="display:none;" class="error">
+        <strong>错误:</strong> <span id="errorMsg"></span>
+    </div>
+
+    <div id="result" style="display:none;" class="card">
+        <h3 style="color:#007bff; margin-bottom:20px;">📝 题解结果</h3>
+        
+        <div class="result-section">
+            <h4>🏷️ 题型识别</h4>
+            <div id="problemType"></div>
+        </div>
+
+        <div class="result-section">
+            <h4>💡 解题思路</h4>
+            <p id="coreIdea"></p>
+        </div>
+
+        <div class="result-section">
+            <h4>🗄️ 数据结构选择</h4>
+            <p id="dataStructure"></p>
+        </div>
+
+        <div class="result-section">
+            <h4>📋 步骤解析</h4>
+            <ul id="steps"></ul>
+        </div>
+
+        <div class="result-section">
+            <h4>💻 参考代码</h4>
+            <pre><code id="referenceCode"></code></pre>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div class="result-section" style="flex: 1;">
+                <h4>⏱️ 时间复杂度</h4>
+                <div id="timeComplexity" style="background:#ffc107; color:#333; padding:5px 10px; border-radius:4px; display:inline-block;"></div>
+            </div>
+            <div class="result-section" style="flex: 1;">
+                <h4>💾 空间复杂度</h4>
+                <div id="spaceComplexity" style="background:#ffc107; color:#333; padding:5px 10px; border-radius:4px; display:inline-block;"></div>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <h4>⚠️ 边界样例</h4>
+            <ul id="edgeCases"></ul>
+        </div>
+
+        <div class="result-section">
+            <h4>⚠️ 易错点</h4>
+            <ul id="mistakes"></ul>
+        </div>
+
+        <div class="result-section">
+            <h4>⬆️ 优化方案</h4>
+            <p id="optimization"></p>
+        </div>
+
+        <div class="result-section">
+            <h4>📚 RAG 检索上下文</h4>
+            <div id="ragContext" style="background:#e9ecef; padding:10px; border-radius:4px; display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.algorithm-container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 10; }
+.card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: white; }
+.form-group { margin-bottom: 15px; display: block; }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; display: block; }
+textarea { height: 100px; }
+select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; height: 45px; background: white; color: #333; font-size: 14px; display: block; }
+button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; display: block; }
+button:hover { background: #0056b3; }
+.loading { text-align: center; color: #007bff; }
+.error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; }
+.result-section { margin-bottom: 20px; }
+.result-section h4 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; border: 1px solid #ddd; }
+ul { padding-left: 20px; }
+</style>
+
 <script>
-    $('.bg-cover').css('background-image', 'url(/medias/banner/0.jpg)');
+window.addEventListener('DOMContentLoaded', function() {
+    const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
+    const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
+        ? "http://127.0.0.1:8000"
+        : PRODUCTION_API_BASE_URL;
+
+    const solveBtn = document.getElementById('solveBtn');
+    if (solveBtn) {
+        solveBtn.addEventListener('click', function() {
+            const problem = document.getElementById('problemInput').value.trim();
+            const language = document.getElementById('languageSelect').value;
+            const difficulty = document.getElementById('difficultySelect').value;
+
+            if (!problem) {
+                alert('请输入算法题描述');
+                return;
+            }
+
+            solveBtn.style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            fetch(`${API_BASE_URL}/api/algorithm-solver`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ problem, language, difficulty })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('problemType').textContent = data.problem_type?.join(', ') || '未知';
+                document.getElementById('coreIdea').textContent = data.core_idea || '-';
+                document.getElementById('dataStructure').textContent = data.data_structure || '-';
+                document.getElementById('timeComplexity').textContent = data.time_complexity || '-';
+                document.getElementById('spaceComplexity').textContent = data.space_complexity || '-';
+                document.getElementById('optimization').textContent = data.optimization || '-';
+                document.getElementById('referenceCode').textContent = data.reference_code || '暂无代码';
+                
+                const steps = document.getElementById('steps');
+                steps.innerHTML = '';
+                (data.step_by_step_solution || []).forEach((step, i) => {
+                    const li = document.createElement('li');
+                    li.textContent = `步骤 ${i+1}: ${step}`;
+                    steps.appendChild(li);
+                });
+
+                const edgeCases = document.getElementById('edgeCases');
+                edgeCases.innerHTML = '';
+                (data.edge_cases || []).forEach((ec, i) => {
+                    const li = document.createElement('li');
+                    li.textContent = `样例 ${i+1}: ${ec}`;
+                    edgeCases.appendChild(li);
+                });
+
+                const mistakes = document.getElementById('mistakes');
+                mistakes.innerHTML = '';
+                (data.common_mistakes || []).forEach((m, i) => {
+                    const li = document.createElement('li');
+                    li.textContent = `注意点 ${i+1}: ${m}`;
+                    mistakes.appendChild(li);
+                });
+
+                const rag = document.getElementById('ragContext');
+                if (data.rag_context) {
+                    rag.textContent = data.rag_context;
+                    rag.style.display = 'block';
+                } else {
+                    rag.style.display = 'none';
+                }
+
+                document.getElementById('result').style.display = 'block';
+            })
+            .catch(err => {
+                document.getElementById('errorMsg').textContent = err.message;
+                document.getElementById('error').style.display = 'block';
+            })
+            .finally(() => {
+                solveBtn.style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            });
+        });
+    }
+});
 </script>
 
 
-    </div>
-</div>
+                
+            </div>
+            <hr/>
 
-<main class="content">
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Wsy</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://augensternsy.github.io/algorithm-solver/index.html">https://augensternsy.github.io/algorithm-solver/index.html</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Wsy</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
 
     
 
-<div id="tags" class="container chip-container">
-    <div class="card">
-        <div class="card-content">
-            <div class="tag-title center-align">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;文章标签
+</div>
+
+                </div>
             </div>
-            <div class="tag-chips">
-                
-                
-                <a href="/tags/AI/" title="AI: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            data-tagname="AI" style="background-color: #F9EBEA;">AI
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E6%B5%8B%E8%AF%95/" title="测试: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="测试" style="background-color: #F5EEF8;">测试
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7/" title="自动化工具: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="自动化工具" style="background-color: #D5F5E3;">自动化工具
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/Python/" title="Python: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="Python" style="background-color: #E8F8F5;">Python
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/FastAPI/" title="FastAPI: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="FastAPI" style="background-color: #FEF9E7;">FastAPI
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/RAG/" title="RAG: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="RAG" style="background-color: #F8F9F9;">RAG
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E7%AE%97%E6%B3%95/" title="算法: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="算法" style="background-color: #82E0AA;">算法
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E7%AC%AC%E5%8D%81%E4%B8%80%E5%B1%8A%E8%93%9D%E6%A1%A5%E6%9D%AF%E7%9C%81%E8%B5%9BC-C-B%E7%BB%84%E9%A2%98%E7%9B%AE%E5%8F%8A%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" title="第十一届蓝桥杯省赛C/C++B组题目及部分题解: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="第十一届蓝桥杯省赛C/C++B组题目及部分题解" style="background-color: #D7BDE2;">第十一届蓝桥杯省赛C/C++B组题目及部分题解
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-    
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
 
-    <article id="articles" class="container articles">
-        <div class="row tags-posts">
-            
-            
-            <div class="article tag-post col s12 m6 l4" data-tags="AI, Python, FastAPI, RAG, 算法" data-aos="fade-up">
-                <div class="card">
-                    <a href="/2026/05/21/ai-suan-fa-ti-jie-yu-fu-za-du-fen-xi-sheng-cheng-qi/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="基于 FastAPI + DeepSeek + LangChain 的 AI 算法题解与复杂度分析生成器">
-                            
-                            <span class="card-title">基于 FastAPI + DeepSeek + LangChain 的 AI 算法题解与复杂度分析生成器</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-05-21
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" class="post-category">
-                                技术分享
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="article tag-post col s12 m6 l4" data-tags="AI, 测试, 自动化工具" data-aos="fade-up">
-                <div class="card">
-                    <a href="/2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="AI 测试用例生成器">
-                            
-                            <span class="card-title">AI 测试用例生成器</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2026-05-07
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%B7%A5%E5%85%B7/" class="post-category">
-                                工具
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
         </div>
-    </article>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
 </main>
 
 
