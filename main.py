@@ -356,3 +356,9 @@ async def algorithm_solver(request: AlgorithmRequest):
             "message": f"生成算法题解失败: {str(e)}",
             "data": None
         }
+
+
+# Vercel Serverless 部署需要的 Mangum 适配器
+from mangum import Mangum
+
+handler = Mangum(app)
