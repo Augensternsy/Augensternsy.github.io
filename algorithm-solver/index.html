@@ -578,18 +578,25 @@ window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('result').style.display = 'none';
             document.getElementById('error').style.display = 'none';
 
-            fetch(`${API_BASE_URL}/api/algorithm-solver`, {
+            const requestUrl = `${API_BASE_URL}/api/algorithm-solver`;
+            console.log("API_BASE_URL:", API_BASE_URL);
+            console.log("Request URL:", requestUrl);
+            console.log("Request body:", { problem, language, difficulty });
+
+            fetch(requestUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ problem, language, difficulty })
             })
             .then(response => {
+                console.log("Response status:", response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(response => {
+                console.log("Response data:", response);
                 if (!response.success) {
                     throw new Error(response.message || '生成失败');
                 }
@@ -638,7 +645,12 @@ window.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('result').style.display = 'block';
             })
             .catch(err => {
-                document.getElementById('errorMsg').textContent = err.message;
+                console.error("请求失败:", err);
+                let errorMsg = err.message || '未知错误';
+                if (err.message.includes('Failed to fetch') || err.message.includes('net::ERR')) {
+                    errorMsg = '无法连接到API服务，请检查：\n1. Vercel后端是否已部署\n2. 网络连接是否正常\n3. API地址是否正确';
+                }
+                document.getElementById('errorMsg').textContent = errorMsg;
                 document.getElementById('error').style.display = 'block';
             })
             .finally(() => {
