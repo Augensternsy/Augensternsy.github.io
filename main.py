@@ -274,7 +274,7 @@ async def algorithm_solver(request: AlgorithmRequest):
   ],
   "common_mistakes": ["先把当前元素放入哈希表再查找，可能导致同一个元素被使用两次。", "没有考虑数组中存在重复元素的情况。"],
   "optimization": "暴力解法需要 O(n²) 时间复杂度，使用哈希表可以将时间复杂度优化到 O(n)，空间复杂度为 O(n)。",
-  "rag_context": "未检索到强相关模板，基于通用算法知识生成。"
+  "rag_context": "数组与哈希表"
 }}
 
 ## 用户输入
@@ -286,15 +286,15 @@ async def algorithm_solver(request: AlgorithmRequest):
 ## 输出要求（必须严格遵守）
 1. 只输出 JSON，不要输出任何其他文字。
 2. 必须包含以下字段：problem_type, estimated_difficulty, difficulty_reason, core_idea, data_structure, step_by_step_solution, reference_code, time_complexity, space_complexity, edge_cases, common_mistakes, optimization, rag_context。
-3. problem_type 是字符串数组。
+3. problem_type 是字符串数组，用于识别题型，如：数组、哈希表、双指针、滑动窗口、动态规划、栈、队列、树、图、回溯、贪心等。
 4. estimated_difficulty 取值为：简单、中等、困难。
 5. difficulty_reason 解释为什么属于该难度。
-6. step_by_step_solution 是字符串数组。
-7. edge_cases 至少包含 3 个对象，每个对象包含 input, output, explanation 字段。
-8. common_mistakes 是字符串数组。
-9. reference_code 包含完整可运行的代码。
-10. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
-11. rag_context 说明检索结果摘要。
+6. rag_context 返回最相关的算法模板名称，用顿号分隔，如："数组与哈希表"、"双指针与排序"、"动态规划-背包问题"、"图论-DFS/BFS"等。如果没有匹配到明确模板，返回空字符串""。
+7. step_by_step_solution 是字符串数组。
+8. edge_cases 至少包含 3 个对象，每个对象包含 input, output, explanation 字段。
+9. common_mistakes 是字符串数组。
+10. reference_code 包含完整可运行的代码。
+11. time_complexity 和 space_complexity 说明复杂度并解释变量含义。
 
 开始输出："""
 
@@ -350,7 +350,7 @@ async def algorithm_solver(request: AlgorithmRequest):
             result["edge_cases"] = valid_cases
         
         if not result["rag_context"]:
-            result["rag_context"] = "未检索到强相关模板，基于通用算法知识生成。"
+            result["rag_context"] = ""
         
         return {
             "success": True,
