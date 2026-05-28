@@ -331,7 +331,7 @@ function copyOptimizedCode() {
 
 function generateOptimizedSolution() {
     const btn = document.getElementById('generateOptimizedBtn');
-    const PRODUCTION_API_BASE_URL = "https://augensternsy-blog-yi-mio.vercel.app";
+    const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
     const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
         ? "http://127.0.0.1:8000"
         : PRODUCTION_API_BASE_URL;
@@ -412,7 +412,7 @@ function generateOptimizedSolution() {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-    const PRODUCTION_API_BASE_URL = "https://augensternsy-blog-yi-mio.vercel.app";
+    const PRODUCTION_API_BASE_URL = "https://augensternsy-github-io.vercel.app";
     const API_BASE_URL = location.hostname === "localhost" || location.hostname === "127.0.0.1"
         ? "http://127.0.0.1:8000"
         : PRODUCTION_API_BASE_URL;
