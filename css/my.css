@@ -6,3 +6,173 @@ body, html {
 a, .btn, i, li, img {
     cursor: url('https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile-Shoka@1.2/image/cursor/link.cur'), pointer !important;
 }
+
+/* About page: featured AI drug design project */
+.my-projects .project-card--featured {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 980px;
+    margin: 0.75rem auto 2rem;
+    padding: 1.75rem 2rem;
+    border: 1px solid rgba(38, 112, 95, 0.18);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(232, 247, 240, 0.92) 0%, rgba(255, 255, 255, 0.98) 58%);
+    box-shadow: 0 12px 34px rgba(31, 86, 72, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.my-projects .project-card--featured:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 42px rgba(31, 86, 72, 0.16);
+}
+
+.my-projects .project-card--featured .icon {
+    width: 78px;
+    height: 78px;
+    line-height: 78px;
+    box-shadow: 0 9px 24px rgba(27, 94, 85, 0.22);
+}
+
+.my-projects .project-card--featured .info-title {
+    margin: 0 0 0.65rem;
+    font-size: 1.35rem;
+}
+
+.my-projects .project-card--featured .info-desc {
+    max-width: 690px;
+    margin-bottom: 0.9rem;
+    color: #60726c;
+    line-height: 1.75;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.project-tech span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0.2rem 0.65rem;
+    border: 1px solid rgba(38, 112, 95, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.76);
+    color: #2f685a;
+    font-size: 0.72rem;
+    line-height: 1.2;
+}
+
+.project-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-width: 132px;
+}
+
+.project-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 42px;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.project-action:hover {
+    transform: translateY(-2px);
+}
+
+.project-action:focus-visible {
+    outline: 3px solid rgba(67, 160, 71, 0.32);
+    outline-offset: 3px;
+}
+
+.project-action--primary {
+    background: linear-gradient(135deg, #1b5e55 0%, #43a047 100%);
+    color: #fff !important;
+    box-shadow: 0 7px 18px rgba(27, 94, 85, 0.2);
+}
+
+.project-action--secondary {
+    border: 1px solid rgba(52, 73, 94, 0.2);
+    background: #fff;
+    color: #34495e !important;
+}
+
+body.DarkMode .my-projects .project-card--featured {
+    border-color: rgba(129, 199, 132, 0.22);
+    background: linear-gradient(135deg, rgba(29, 66, 58, 0.92) 0%, rgba(40, 44, 46, 0.98) 62%);
+}
+
+body.DarkMode .my-projects .project-card--featured .info-desc,
+body.DarkMode .project-tech span {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+body.DarkMode .project-tech span,
+body.DarkMode .project-action--secondary {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+@media only screen and (max-width: 992px) {
+    .my-projects .project-card--featured {
+        grid-template-columns: 78px minmax(0, 1fr);
+    }
+
+    .project-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding-left: 93px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .my-projects {
+        padding-right: 0.25rem;
+        padding-left: 0.25rem;
+    }
+
+    .my-projects .project-card--featured {
+        display: block;
+        padding: 1.5rem 1.25rem;
+        text-align: center;
+    }
+
+    .my-projects .project-card--featured .icon {
+        margin-bottom: 1.1rem;
+    }
+
+    .my-projects .project-card--featured .info-desc {
+        text-align: left;
+    }
+
+    .project-tech {
+        justify-content: center;
+    }
+
+    .project-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+        margin-top: 1.25rem;
+        padding-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .my-projects .project-card--featured,
+    .project-action {
+        transition: none;
+    }
+}
