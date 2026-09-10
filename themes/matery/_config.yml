@@ -249,6 +249,24 @@ profile:
 myProjects:
   enable: true
   data:
+    AI 药物分子设计 Agent:
+      featured: true
+      icon: fas fa-atom
+      iconBackground: 'linear-gradient(135deg, #1b5e55 0%, #43a047 100%)'
+      url: https://frontend-augensternsys-projects.vercel.app
+      demoUrl: https://frontend-augensternsys-projects.vercel.app
+      githubUrl: https://github.com/Augensternsy/ai-drug-design-agent
+      desc: 基于 ESM-2 与 DLPS-E2PO 的靶点条件分子生成系统，结合 RDKit 分子性质评价与 AutoDock Vina 分子对接，支持在线生成候选分子。
+      tech:
+        - React
+        - TypeScript
+        - Vite
+        - FastAPI
+        - Modal GPU
+        - ESM-2
+        - DLPS-E2PO
+        - RDKit
+        - AutoDock Vina
     hexo-theme-matery:
       icon: fas fa-file-alt
       iconBackground: 'linear-gradient(to bottom right, #66BB6A 0%, #81C784 100%)'

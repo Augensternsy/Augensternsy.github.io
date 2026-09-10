@@ -6,6 +6,9 @@
         <div class="card">
             <div class="card-content">
                 <%- page.content %>
+                <% if (page.type === 'about' && theme.myProjects && theme.myProjects.enable) { %>
+                <%- partial('_widget/my-projects') %>
+                <% } %>
             </div>
         </div>
     </div>

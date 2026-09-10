@@ -9,16 +9,41 @@ var myprojects = theme.myProjects.data;
     <div class="row">
         <% if (myprojects) { %>
         <% Object.keys(myprojects).forEach(function(project) { %>
-        <div class="col s12 m6 l4" data-aos="fade-up">
-            <div class="info center-align">
-                <a href="<%- myprojects[project].url %>" class="icon"
-                   style="background: <%- myprojects[project].iconBackground %>" target="_blank">
-                    <i class="<%- myprojects[project].icon %>"></i>
+        <% var item = myprojects[project]; %>
+        <div class="col s12 <%- item.featured ? 'l12' : 'm6 l4' %>" data-aos="fade-up">
+            <div class="info project-card <%- item.featured ? 'project-card--featured left-align' : 'center-align' %>">
+                <a href="<%- item.demoUrl || item.url %>" class="icon"
+                   style="background: <%- item.iconBackground %>" target="_blank" rel="noopener noreferrer"
+                   aria-label="打开 <%- project %>">
+                    <i class="<%- item.icon %>"></i>
                 </a>
-                <div class="info-title">
-                    <a href="<%- url_for(myprojects[project].url) %>" target="_blank"><%- project %></a>
+                <div class="project-card__content">
+                    <div class="info-title">
+                        <a href="<%- item.demoUrl || item.url %>" target="_blank" rel="noopener noreferrer"><%- project %></a>
+                    </div>
+                    <div class="info-desc"><%= item.desc %></div>
+                    <% if (item.tech && item.tech.length) { %>
+                    <div class="project-tech" aria-label="技术栈">
+                        <% item.tech.forEach(function(tech) { %>
+                        <span><%- tech %></span>
+                        <% }); %>
+                    </div>
+                    <% } %>
                 </div>
-                <div class="info-desc"><%= myprojects[project].desc %></div>
+                <% if (item.demoUrl || item.githubUrl) { %>
+                <div class="project-actions">
+                    <% if (item.demoUrl) { %>
+                    <a class="project-action project-action--primary" href="<%- item.demoUrl %>" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-rocket"></i><span>在线体验</span>
+                    </a>
+                    <% } %>
+                    <% if (item.githubUrl) { %>
+                    <a class="project-action project-action--secondary" href="<%- item.githubUrl %>" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i><span>GitHub</span>
+                    </a>
+                    <% } %>
+                </div>
+                <% } %>
             </div>
         </div>
         <% }); %>
