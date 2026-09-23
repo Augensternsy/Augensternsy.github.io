@@ -249,6 +249,21 @@ profile:
 myProjects:
   enable: true
   data:
+    AI Agent Automated Testing Platform:
+      featured: true
+      icon: fas fa-robot
+      iconBackground: 'linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%)'
+      url: https://ai-testing-agent-web.vercel.app
+      demoUrl: https://ai-testing-agent-web.vercel.app
+      githubUrl: https://github.com/Augensternsy/ai-testing-agent
+      desc: 'RAG + DeepSeek powered API testing pipeline. Transforms OpenAPI specifications into structured test cases, PyTest scripts, execution reports, and controlled repair loops. 89/89 tests passing, GitHub Actions CI verified.'
+      tech:
+        - RAG
+        - DeepSeek
+        - FastAPI
+        - PyTest
+        - React
+        - GitHub Actions
     AI 药物分子设计 Agent:
       featured: true
       icon: fas fa-atom
