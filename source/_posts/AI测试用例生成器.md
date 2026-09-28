@@ -93,11 +93,15 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    // 显示加载状态
+    // 显示加载状态（模型生成通常需要 8~15 秒）
     btnEl.disabled = true;
-    btnEl.textContent = '生成中...';
+    btnEl.textContent = '生成中…约需 10 秒，请稍候';
     resultContainer.classList.add('hidden');
-    
+
+    // 30 秒超时保护，避免无限等待
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
     try {
       // 发送 POST 请求
       const response = await fetch(API_URL, {
@@ -108,24 +112,34 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({
           requirement: requirement,
           top_k: 3
-        })
+        }),
+        signal: controller.signal
       });
-      
+
+      clearTimeout(timeoutId);
+
       // 检查响应状态
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       // 解析响应数据
       const data = await response.json();
-      
+
       // 渲染结果
       renderTestCases(data);
-      
+
     } catch (error) {
-      console.error('生成测试用例失败:', error);
-      alert('生成失败，请检查网络连接或后端服务是否正常运行');
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.error('生成测试用例超时');
+        alert('生成超时（超过 30 秒），可能是服务繁忙，请稍后重试');
+      } else {
+        console.error('生成测试用例失败:', error);
+        alert('生成失败，请检查网络连接或后端服务是否正常运行');
+      }
     } finally {
+      clearTimeout(timeoutId);
       // 恢复按钮状态
       btnEl.disabled = false;
       btnEl.textContent = '生成测试用例';
