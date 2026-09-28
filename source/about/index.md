@@ -50,6 +50,7 @@ comments: false
 ### 智能在线考试与防作弊监控系统
 *2026.01 - 2026.03*
 
+* **在线 Demo**：https://vue-augensternsys-projects.vercel.app/ ｜ **GitHub**：https://github.com/Augensternsy/ai-online-exam-platform
 * 研发考试核心模块（Spring Boot + Vue），引入 Spring AI 框架对接 DeepSeek，运用结构化 Prompt 稳定输出 JSON 格式试题实现自动入库，大幅降低教务出题成本。
 * 搭建 Python + Selenium 自动化链路。针对集成 Tracking.js 的人脸识别监考场景，通过底层 JS 注入与虚拟视频流技术进行数据 Mock，实现"切屏、无人、多人"等复杂边界用例的自动化回归。
 * 针对"集中交卷"并发场景，预埋 5 万条测试数据并构建 JMeter 阶梯加压模型。通过慢查询日志与 EXPLAIN 分析定位全表扫描瓶颈，补充联合索引优化高耗时查询，使核心接口吞吐量实现显著提升。

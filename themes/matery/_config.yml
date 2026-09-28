@@ -264,6 +264,23 @@ myProjects:
         - PyTest
         - React
         - GitHub Actions
+    AI 智能在线考试平台:
+      featured: true
+      icon: fas fa-graduation-cap
+      iconBackground: 'linear-gradient(135deg, #42b983 0%, #2196f3 100%)'
+      url: https://vue-augensternsys-projects.vercel.app
+      demoUrl: https://vue-augensternsys-projects.vercel.app
+      githubUrl: https://github.com/Augensternsy/ai-online-exam-platform
+      desc: '基于 Spring Boot + Vue + DeepSeek 的 AI 智能在线考试平台，支持 AI 出题、在线考试、自动评分，含 Selenium 自动化测试、JMeter 性能压测及 Docker/K8s 部署验证。'
+      tech:
+        - Spring Boot
+        - Vue
+        - DeepSeek
+        - MySQL
+        - Selenium
+        - JMeter
+        - Docker
+        - K8s
     AI 药物分子设计 Agent:
       featured: true
       icon: fas fa-atom
