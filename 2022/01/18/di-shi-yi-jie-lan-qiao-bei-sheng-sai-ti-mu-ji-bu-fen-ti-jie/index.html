@@ -1070,8 +1070,11 @@
         });
 
         // modify the heading title id to support Chinese.
+        // 使用 find（全部后代）而非 children（仅直接子级），确保嵌入 HTML 块中
+        // 嵌套的标题也被重命名，与上方目录链接的数量/顺序一一对齐，
+        // 避免 tocbot 滚动高亮时因 id 与 href 错位取到 null 而报 className 错误。
         i = 0;
-        $('#articleContent').children('h2, h3, h4').each(function () {
+        $('#articleContent').find('h2, h3, h4').each(function () {
             $(this).attr('id', tocHeading + (++i));
         });
 
