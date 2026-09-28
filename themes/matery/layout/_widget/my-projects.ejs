@@ -1,14 +1,18 @@
 <%
 // the projects information of theme _config.yml.
 var myprojects = theme.myProjects.data;
+// 首页仅展示 featured 项目时由调用方传入 onlyFeatured=true；关于页不传，展示全部。
+var projectKeys = myprojects ? Object.keys(myprojects) : [];
+if (typeof onlyFeatured !== 'undefined' && onlyFeatured) {
+    projectKeys = projectKeys.filter(function (key) { return myprojects[key].featured; });
+}
 %>
 <div class="my-projects">
     <div class="title center-align" data-aos="zoom-in-up">
         <i class="fas fa-gift"></i>&nbsp;&nbsp;<%- __('myProjects') %>
     </div>
     <div class="row">
-        <% if (myprojects) { %>
-        <% Object.keys(myprojects).forEach(function(project) { %>
+        <% projectKeys.forEach(function(project) { %>
         <% var item = myprojects[project]; %>
         <div class="col s12 <%- item.featured ? 'l12' : 'm6 l4' %>" data-aos="fade-up">
             <div class="info project-card <%- item.featured ? 'project-card--featured left-align' : 'center-align' %>">
@@ -47,6 +51,5 @@ var myprojects = theme.myProjects.data;
             </div>
         </div>
         <% }); %>
-        <% } %>
     </div>
 </div>
