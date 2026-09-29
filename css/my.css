@@ -477,3 +477,19 @@ body.DarkMode .project-action--secondary {
         padding: 1.4rem 1.1rem 1.1rem;
     }
 }
+
+/* ========== 顶部导航锚点平滑滚动（项目 / 博客） ========== */
+html {
+    scroll-behavior: smooth;
+}
+
+#indexProjects,
+#articles {
+    scroll-margin-top: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
