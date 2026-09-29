@@ -176,3 +176,304 @@ body.DarkMode .project-action--secondary {
         transition: none;
     }
 }
+
+/* ========== 首页「我的项目」三列布局（仅 #indexProjects 作用域，不影响关于页） ========== */
+#indexProjects .my-projects .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 0;
+}
+
+#indexProjects .my-projects .row > .col {
+    flex: 0 0 calc(33.3333% - 12px);
+    width: calc(33.3333% - 12px);
+    max-width: calc(33.3333% - 12px);
+    margin-left: 0;
+    float: none;
+}
+
+#indexProjects .my-projects .project-card--featured {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-template-columns: none;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    padding: 1.75rem 1.35rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#indexProjects .my-projects .project-card--featured .icon {
+    width: 68px;
+    height: 68px;
+    line-height: 68px;
+    margin: 0 auto 1.1rem;
+}
+
+#indexProjects .project-card__content {
+    width: 100%;
+}
+
+#indexProjects .project-card--featured .info-title {
+    font-size: 1.12rem;
+    margin: 0 0 0.6rem;
+}
+
+#indexProjects .project-card--featured .info-desc {
+    max-width: none;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+}
+
+#indexProjects .project-tech {
+    justify-content: center;
+}
+
+#indexProjects .project-actions {
+    flex-direction: row;
+    min-width: 0;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1rem;
+    padding-left: 0;
+}
+
+#indexProjects .project-action {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.6rem 0.5rem;
+    white-space: nowrap;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 991px) {
+    #indexProjects .my-projects .row > .col {
+        flex: 0 0 calc(50% - 9px);
+        width: calc(50% - 9px);
+        max-width: calc(50% - 9px);
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    #indexProjects .my-projects .row > .col {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #indexProjects .my-projects .project-card--featured {
+        padding: 1.5rem 1rem;
+    }
+
+    #indexProjects .project-card--featured .info-desc {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    #indexProjects .project-tech {
+        overflow-wrap: break-word;
+    }
+
+    #indexProjects .project-actions {
+        flex-direction: row;
+    }
+}
+
+/* ========== 首页项目卡精修（Vercel / Linear 风格，仅 #indexProjects 作用域） ========== */
+/* 每张卡独立主题色：1 蓝紫 / 2 青蓝 / 3 绿，只用于强调线、图标、hover 阴影、Label */
+#indexProjects .my-projects .row > .col:nth-child(1) {
+    --accent-1: #6366f1;
+    --accent-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --accent-bg: rgba(99, 102, 241, 0.09);
+    --accent-shadow: rgba(99, 102, 241, 0.16);
+    --card-bg: url('/medias/featureimages/2.jpg');
+    --card-overlay: linear-gradient(160deg, rgba(52, 54, 84, 0.62) 0%, rgba(52, 54, 84, 0.54) 60%, rgba(52, 54, 84, 0.6) 100%);
+}
+
+#indexProjects .my-projects .row > .col:nth-child(2) {
+    --accent-1: #0891b2;
+    --accent-grad: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --accent-bg: rgba(6, 182, 212, 0.09);
+    --accent-shadow: rgba(6, 182, 212, 0.16);
+    --card-bg: url('/medias/featureimages/5.jpg');
+    --card-overlay: linear-gradient(160deg, rgba(22, 44, 74, 0.62) 0%, rgba(22, 44, 74, 0.54) 60%, rgba(22, 44, 74, 0.6) 100%);
+}
+
+#indexProjects .my-projects .row > .col:nth-child(3) {
+    --accent-1: #059669;
+    --accent-grad: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+    --accent-bg: rgba(16, 185, 129, 0.09);
+    --accent-shadow: rgba(16, 185, 129, 0.16);
+    --card-bg: url('/medias/featureimages/0.jpg');
+    --card-overlay: linear-gradient(160deg, rgba(16, 48, 46, 0.62) 0%, rgba(16, 48, 46, 0.54) 60%, rgba(16, 48, 46, 0.6) 100%);
+}
+
+/* 卡片本体：背景图 + 深色渐变蒙层 + 18px 圆角 + 顶部渐变强调线 */
+#indexProjects .my-projects .project-card--featured {
+    position: relative;
+    background-image: var(--card-overlay), var(--card-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 6px 18px rgba(0, 0, 0, 0.14);
+    padding: 1.5rem 1.4rem 1.2rem;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-size 0.4s ease;
+}
+
+#indexProjects .my-projects .project-card--featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5px;
+    background: var(--accent-grad);
+    opacity: 0.85;
+    transition: opacity 0.25s ease;
+}
+
+#indexProjects .my-projects .project-card--featured:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px -10px var(--accent-shadow), 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-size: 108% auto;
+}
+
+#indexProjects .my-projects .project-card--featured:hover::before {
+    opacity: 1;
+}
+
+/* 项目类型 Label：小、轻、低饱和，白色微透底 */
+#indexProjects .project-label {
+    align-self: flex-start;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-1);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.22rem 0.55rem;
+    border-radius: 6px;
+    margin-bottom: 0.9rem;
+    opacity: 0.72;
+}
+
+/* 图标：缩小、轻渐变、无重阴影 */
+#indexProjects .my-projects .project-card--featured .icon {
+    width: 52px;
+    height: 52px;
+    line-height: 52px;
+    font-size: 1.25rem;
+    background: var(--accent-grad);
+    box-shadow: none;
+    margin: 0 auto 0.4rem;
+    transition: transform 0.25s ease;
+}
+
+#indexProjects .my-projects .project-card--featured:hover .icon {
+    transform: scale(1.04);
+}
+
+/* 标题居中，收紧字距，白色 */
+#indexProjects .project-card--featured .info-title {
+    font-size: 1.06rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.55rem;
+}
+#indexProjects .project-card--featured .info-title a { color: #f1f5f9; }
+
+/* 描述：左对齐，浅灰 */
+#indexProjects .project-card--featured .info-desc {
+    text-align: left;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 0.8rem;
+}
+
+/* Highlight：白色 + 主题色左边线 */
+#indexProjects .project-highlight {
+    text-align: left;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.8rem;
+    padding-left: 0.6rem;
+    border-left: 2.5px solid var(--accent-1);
+}
+
+/* 技术标签：半透明描边风格，适配背景图 */
+#indexProjects .project-tech {
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+#indexProjects .project-tech span {
+    font-size: 0.68rem;
+    padding: 0.16rem 0.5rem;
+    background: rgba(15, 23, 42, 0.22);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(241, 245, 249, 0.72);
+    border-radius: 999px;
+}
+
+/* 按钮区：分割线 + 主按钮实心渐变，次按钮暗底描边 */
+#indexProjects .project-actions {
+    justify-content: flex-start;
+    gap: 10px;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#indexProjects .project-action {
+    flex: 0 0 auto;
+    padding: 0.48rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 9px;
+    box-shadow: none;
+}
+
+/* 主按钮：实心渐变，低饱和，不透明 */
+#indexProjects .project-action--primary {
+    background: var(--accent-grad);
+    color: #fff;
+    filter: saturate(0.85);
+}
+
+#indexProjects .project-action--primary:hover {
+    filter: saturate(0.95) brightness(1.08);
+    transform: none;
+    box-shadow: none;
+}
+
+/* 次按钮：实心白底 + 深色字，不透明 */
+#indexProjects .project-action--secondary {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+}
+
+#indexProjects .project-action--secondary:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #94a3b8;
+    box-shadow: none;
+    transform: none;
+}
+
+@media only screen and (max-width: 600px) {
+    #indexProjects .my-projects .project-card--featured {
+        padding: 1.4rem 1.1rem 1.1rem;
+    }
+}
