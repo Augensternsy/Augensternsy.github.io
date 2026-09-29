@@ -4,7 +4,7 @@ date: 2022-04-5 20:48:00
 tags: 第十二届蓝桥杯省赛JavaB组题目及部分题解
 ---
 
-# 真题链接：[点这里](https://www.lanqiao.cn/courses/280830)
+# 真题链接：[点这里](https://www.lanqiao.cn/courses/2786/learning/?id=280830)
 
 # 填空题
 
