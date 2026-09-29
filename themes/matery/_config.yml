@@ -4,30 +4,24 @@ menu:
   Index:
     url: /
     icon: fas fa-home
-  Tags:
-    url: /tags
-    icon: fas fa-tags
-  Categories:
-    url: /categories
-    icon: fas fa-bookmark
-  Archives:
-    url: /archives
-    icon: fas fa-archive
+  Projects:
+    url: /#indexProjects
+    icon: fas fa-project-diagram
+  Blog:
+    url: /#articles
+    icon: fas fa-book-open
   About:
     url: /about
     icon: fas fa-user-circle
+  Archives:
+    url: /archives
+    icon: fas fa-archive
   Contact:
     url: /contact
     icon: fas fa-comments
   Friends:
     url: /friends
     icon: fas fa-address-book
-  AI测试用例:
-    url: /2026/05/07/ai-ce-shi-yong-li-sheng-cheng-qi/
-    icon: fas fa-robot
-  AI算法题解:
-    url: /algorithm-solver/
-    icon: fas fa-code
   # 二级菜单写法如下
   #Medias:
   #  icon: fas fa-list
