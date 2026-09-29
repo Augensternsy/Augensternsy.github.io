@@ -1,6 +1,8 @@
+---
 title: 第十一届蓝桥杯省赛JavaB组题目及部分题解
 date: 2022-01-22 17:58:08
 tags: 第十一届蓝桥杯省赛JavaB组题目及部分题解
+---
 
 # 真题链接：[点这里](https://www.lanqiao.cn/courses/2786/learning/?id=88906)
 
