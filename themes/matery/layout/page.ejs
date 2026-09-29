@@ -7,7 +7,9 @@
             <div class="card-content">
                 <%- page.content %>
                 <% if (page.type === 'about' && theme.myProjects && theme.myProjects.enable) { %>
-                <%- partial('_widget/my-projects') %>
+                <div id="indexProjects">
+                    <%- partial('_widget/my-projects', { onlyFeatured: true, useShort: true }) %>
+                </div>
                 <% } %>
             </div>
         </div>
