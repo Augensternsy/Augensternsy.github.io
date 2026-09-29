@@ -257,6 +257,9 @@ myProjects:
       demoUrl: https://ai-testing-agent-web.vercel.app
       githubUrl: https://github.com/Augensternsy/ai-testing-agent
       desc: 'RAG + DeepSeek powered API testing pipeline. Transforms OpenAPI specifications into structured test cases, PyTest scripts, execution reports, and controlled repair loops. 89/89 tests passing, GitHub Actions CI verified.'
+      shortDesc: 'OpenAPI → 结构化测试用例 → PyTest 脚本 → 执行报告 → 受控 Agent 修复。RAG + DeepSeek 驱动的 API 测试流水线，89/89 测试通过，GitHub Actions CI 已验证。'
+      label: 'AI AGENT'
+      highlight: '89 / 89 Tests Passed'
       tech:
         - RAG
         - DeepSeek
@@ -272,6 +275,9 @@ myProjects:
       demoUrl: https://vue-augensternsys-projects.vercel.app
       githubUrl: https://github.com/Augensternsy/ai-online-exam-platform
       desc: '基于 Spring Boot + Vue + DeepSeek 的 AI 智能在线考试平台，支持 AI 出题、在线考试、自动评分，含 Selenium 自动化测试、JMeter 性能压测及 Docker/K8s 部署验证。'
+      shortDesc: '基于 Spring Boot + Vue + DeepSeek 的 AI 在线考试平台，支持 AI 出题、在线考试、自动评分，含 Selenium 自动化测试与 JMeter 压测验证。'
+      label: 'FULL-STACK AI'
+      highlight: 'AI · Selenium · JMeter'
       tech:
         - Spring Boot
         - Vue
@@ -289,6 +295,9 @@ myProjects:
       demoUrl: https://frontend-augensternsys-projects.vercel.app
       githubUrl: https://github.com/Augensternsy/ai-drug-design-agent
       desc: 基于 ESM-2 与 DLPS-E2PO 的靶点条件分子生成系统，结合 RDKit 分子性质评价与 AutoDock Vina 分子对接，支持在线生成候选分子。
+      shortDesc: '基于 ESM-2 与 DLPS-E2PO 的靶点条件分子生成系统，结合 RDKit 性质评价与 AutoDock Vina 分子对接，支持在线生成候选分子。'
+      label: 'AI FOR DRUG DISCOVERY'
+      highlight: 'ESM-2 · DLPS-E2PO · AutoDock Vina'
       tech:
         - React
         - TypeScript

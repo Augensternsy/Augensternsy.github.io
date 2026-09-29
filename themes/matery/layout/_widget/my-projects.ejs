@@ -6,6 +6,8 @@ var projectKeys = myprojects ? Object.keys(myprojects) : [];
 if (typeof onlyFeatured !== 'undefined' && onlyFeatured) {
     projectKeys = projectKeys.filter(function (key) { return myprojects[key].featured; });
 }
+// 首页精修模式开关：传入 useShort=true 时启用精简描述 + Label + Highlight + 轻量按钮；关于页不受影响。
+var useShortOn = (typeof useShort !== 'undefined' && useShort);
 %>
 <div class="my-projects">
     <div class="title center-align" data-aos="zoom-in-up">
@@ -16,8 +18,11 @@ if (typeof onlyFeatured !== 'undefined' && onlyFeatured) {
         <% var item = myprojects[project]; %>
         <div class="col s12 <%- item.featured ? 'l12' : 'm6 l4' %>" data-aos="fade-up">
             <div class="info project-card <%- item.featured ? 'project-card--featured left-align' : 'center-align' %>">
+                <% if (useShortOn && item.label) { %>
+                <div class="project-label"><%- item.label %></div>
+                <% } %>
                 <a href="<%- item.demoUrl || item.url %>" class="icon"
-                   style="background: <%- item.iconBackground %>" target="_blank" rel="noopener noreferrer"
+                   <% if (!useShortOn) { %>style="background: <%- item.iconBackground %>"<% } %> target="_blank" rel="noopener noreferrer"
                    aria-label="打开 <%- project %>">
                     <i class="<%- item.icon %>"></i>
                 </a>
@@ -25,7 +30,12 @@ if (typeof onlyFeatured !== 'undefined' && onlyFeatured) {
                     <div class="info-title">
                         <a href="<%- item.demoUrl || item.url %>" target="_blank" rel="noopener noreferrer"><%- project %></a>
                     </div>
-                    <div class="info-desc"><%= item.desc %></div>
+                    <div class="info-desc">
+                        <%= (useShortOn && item.shortDesc) ? item.shortDesc : item.desc %>
+                    </div>
+                    <% if (useShortOn && item.highlight) { %>
+                    <div class="project-highlight"><%- item.highlight %></div>
+                    <% } %>
                     <% if (item.tech && item.tech.length) { %>
                     <div class="project-tech" aria-label="技术栈">
                         <% item.tech.forEach(function(tech) { %>
@@ -38,12 +48,12 @@ if (typeof onlyFeatured !== 'undefined' && onlyFeatured) {
                 <div class="project-actions">
                     <% if (item.demoUrl) { %>
                     <a class="project-action project-action--primary" href="<%- item.demoUrl %>" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-rocket"></i><span>在线体验</span>
+                        <i class="fas fa-rocket"></i><span><%- useShortOn ? '在线体验 →' : '在线体验' %></span>
                     </a>
                     <% } %>
                     <% if (item.githubUrl) { %>
                     <a class="project-action project-action--secondary" href="<%- item.githubUrl %>" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-github"></i><span>GitHub</span>
+                        <i class="fab fa-github"></i><span><%- useShortOn ? 'GitHub ↗' : 'GitHub' %></span>
                     </a>
                     <% } %>
                 </div>
